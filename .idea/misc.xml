@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android_file/Coolsports/login/src/main/res/layout/login_activity_main.xml" value="0.1265625" />
-        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/sport_activity_main.xml" value="0.1265625" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/drawable/background_sportmap.xml" value="0.2212962962962963" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_out_room.xml" value="0.24947916666666667" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_room.xml" value="0.24947916666666667" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/sport_activity_main.xml" value="0.2" />
       </map>
     </option>
   </component>

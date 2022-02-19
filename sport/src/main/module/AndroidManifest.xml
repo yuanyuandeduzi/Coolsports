@@ -3,7 +3,7 @@
     package="com.example.sport">
 
     <application android:allowBackup="true">
-        <activity android:name=".sport_MainActivity" />
+        <activity android:name=".ui.sport_MainActivity" />
     </application>
 
 </manifest>
