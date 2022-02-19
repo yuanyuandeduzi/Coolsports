@@ -7,4 +7,22 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green_start">#4CAF50</color>
+    <color name="start_button_write">#7EC0C8B9</color>
+
+    <!--路线绘制颜色-->
+    <color name="sport_point_write">#E895DA26</color>
+    <!--运动显示字体颜色-->
+    <color name="text_color_1">#4CAF50</color>
+    <color name="text_color_2">#B0B1B0</color>
+    <color name="text_color_3">#333333</color>
+    <color name="text_color_4">#2196F3</color>
+
+    <!--渐变背景-->
+    <color name="start_back">#D412DF28</color>
+    <color name="center_back">#4012DF28</color>
+    <color name="end_back">#0D12DF28</color>
+    <!--背景-->
+    <color name="bg_run_room">#2E3978</color>
+
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    字体大小-->
+    <dimen name="textSize_0">10sp</dimen>
+    <dimen name="textSize_1">11sp</dimen>
+    <dimen name="textSize_2">12sp</dimen>
+    <dimen name="textSize_3">13sp</dimen>
+    <dimen name="textSize_4">14sp</dimen>
+    <dimen name="textSize_5">15sp</dimen>
+    <dimen name="textSize_6">16sp</dimen>
+    <dimen name="textSize_7">17sp</dimen>
+    <dimen name="textSize_8">18sp</dimen>
+
+    <!--    边距-->
+    <dimen name="margin_top">100dp</dimen>
+    <dimen name="margin_bottom">110dp</dimen>
+</resources>
