@@ -114,15 +114,15 @@ public class MyProgressButton extends View {
 
     //初始化属性参数
     private void initAttrs(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MyProgressButton, 0, 0);
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MyCustomizedView, 0, 0);
 
-        mCircleColor = typedArray.getColor(R.styleable.MyProgressButton_circleColor, 0xFFFFFFFF);
-        mRingColor = typedArray.getColor(R.styleable.MyProgressButton_ringColor, 0xCCCCCC);
-        mCircleC3Color = typedArray.getColor(R.styleable.MyProgressButton_ringCColor, 0xCCCCCC);
-        mRadius = typedArray.getDimension(R.styleable.MyProgressButton_radius, 80);
-        mRingWidth = typedArray.getDimension(R.styleable.MyProgressButton_strokeWidth, 10);
-        mTextColor = typedArray.getColor(R.styleable.MyProgressButton_textColor, 0xFFFFF);
-        mTextContent = typedArray.getString(R.styleable.MyProgressButton_text);
+        mCircleColor = typedArray.getColor(R.styleable.MyCustomizedView_circleColor, 0xFFFFFFFF);
+        mRingColor = typedArray.getColor(R.styleable.MyCustomizedView_ringColor, 0xCCCCCC);
+        mCircleC3Color = typedArray.getColor(R.styleable.MyCustomizedView_ringCColor, 0xCCCCCC);
+        mRadius = typedArray.getDimension(R.styleable.MyCustomizedView_radius, 80);
+        mRingWidth = typedArray.getDimension(R.styleable.MyCustomizedView_strokeWidth, 10);
+        mTextColor = typedArray.getColor(R.styleable.MyCustomizedView_textColor, 0xFFFFF);
+        mTextContent = typedArray.getString(R.styleable.MyCustomizedView_text);
         mBigCircleRadius = mRadius + mRingWidth * 2;
         mRingRadius = mRadius + mRingWidth;
     }

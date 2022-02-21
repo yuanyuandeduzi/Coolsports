@@ -30,6 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Coolsports">
         <activity
+            android:name=".ui.sport_Activity_Target"
+            android:exported="false" />
+        <activity
             android:name=".ui.sport_Activity_OutRoom"
             android:exported="false" />
 

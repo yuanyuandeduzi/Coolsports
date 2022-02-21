@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MyProgressButton">
+    <declare-styleable name="MyCustomizedView">
         <attr name="radius" format="dimension"/>
         <attr name="strokeWidth" format="dimension"/>
         <attr name="circleColor" format="color"/>
@@ -8,5 +8,8 @@
         <attr name="ringCColor" format="color"/>
         <attr name="text" format="string" />
         <attr name="textColor" format="color" />
+        <attr name="circleCover" format="color"/>
+        <attr name="kdLength" format="dimension"/>
+        <attr name="textSize" format="dimension"/>
     </declare-styleable>
 </resources>

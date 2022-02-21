@@ -236,7 +236,6 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         });
     }
 
-
     //点击监听
     @SuppressLint("NonConstantResourceId")
     @Override
