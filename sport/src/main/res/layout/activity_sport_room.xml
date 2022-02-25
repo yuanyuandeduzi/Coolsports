@@ -28,29 +28,52 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
         android:text="步数"
-        android:textSize="30dp"
         android:textColor="@color/text_color_2"
+        android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ch_sport_room"/>
+        app:layout_constraintTop_toBottomOf="@id/ch_sport_room" />
 
     <TextView
         android:id="@+id/tv_sum_leg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textSize="80dp"
         android:textColor="@color/text_color_3"
+        android:textSize="80dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_1"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_1" />
+
+    <TextView
+        android:id="@+id/tv_room_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="步幅：75cm"
+        android:textColor="@color/text_color_4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sum_leg" />
+
+    <Button
+        android:id="@+id/bt_room_length"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_record_bg1"
+        android:text="设置步幅"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_room_length" />
 
     <Button
         android:id="@+id/bt_1"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
         android:background="@drawable/circle_sport_bg"
         android:text="暂停"
         android:visibility="gone"
@@ -58,29 +81,27 @@
         android:textSize="30dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_sum_leg"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tv_sum_leg" />
 
     <com.example.sport.view.MyProgressButton
         android:id="@+id/bt_room_end"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/bt_1"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
         app:circleColor="#FF405C"
+        app:layout_constraintBottom_toBottomOf="@id/bt_1"
+        app:layout_constraintLeft_toRightOf="@id/bt_1"
+        app:layout_constraintTop_toTopOf="@id/bt_1"
         app:radius="34dp"
         app:ringCColor="#FA0C45"
         app:ringColor="@color/white"
         app:strokeWidth="3dp"
         app:text="结束"
-        app:textColor="@color/white"
-        android:layout_marginStart="10dp"
-        app:layout_constraintLeft_toRightOf="@id/bt_1"
-        app:layout_constraintTop_toTopOf="@id/bt_1"
-        app:layout_constraintBottom_toBottomOf="@id/bt_1"
-        />
+        app:textColor="@color/white" />
 
     <FrameLayout
         android:id="@+id/layout_room_animation"
@@ -88,13 +109,13 @@
         android:layout_height="match_parent"
         android:background="@color/bg_run_room">
 
-        <TextView
-            android:id="@+id/tv_room_animation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=""
-            android:textColor="@color/white" />
-    </FrameLayout>
+    <TextView
+        android:id="@+id/tv_room_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textColor="@color/white" />
+</FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

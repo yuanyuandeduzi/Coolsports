@@ -63,6 +63,7 @@ public class sport_MainActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    //
     private void openDialog() {
         Dialog dialog = new Dialog(this,R.style.MyDialog);
         View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_item, null);

@@ -1,10 +1,12 @@
 package com.example.sport.ui;
 
+import static com.example.sport.util.TimeUtil.getCurrentTime;
 import static com.example.sport.util.TimeUtil.stringToTime;
 import static com.example.sport.util.TimeUtil.timeFormat;
 import static com.example.sport.util.TimeUtil.timeToString;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -15,12 +17,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,12 +45,17 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.example.sport.R;
+import com.example.sport.db.DbManger;
+import com.example.sport.db.DbRecord;
 import com.example.sport.record.PathRecord;
 import com.example.sport.util.PathSmoothTool;
 import com.example.sport.view.MyProgressButton;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.OnMyLocationChangeListener, View.OnClickListener {
 
@@ -104,13 +113,8 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         myProgressButton.setListener(new MyProgressButton.MyProgressButtonFinishCallback() {
             @Override
             public void isFinish() {
-                Intent intent = new Intent();
-                if (pathRecord != null) {
-
-                    intent.putExtra("ahh", pathRecord);
-                }
-                setResult(1, intent);
-                finish();
+                pathRecord.setDuration(stringToTime(ch_1.getText().toString()));
+                initDialog();
             }
 
             @Override
@@ -268,9 +272,10 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         }
         pathRecord.addLaLng(new LatLng(location.getLatitude(), location.getLongitude()));
         distance = getDistance(pathRecord.getPathLinePoints());
+        pathRecord.setDistance((float) distance);
         //计算配速
-        double sportMile = distance / 1000d;
-        double useTime = stringToTime(ch_1.getText().toString());
+        float sportMile = (float) distance / 1000f;
+        float useTime = stringToTime(ch_1.getText().toString());
         if (sportMile > 0.05 && useTime > 0.2) {
             if (useTime - lastUpdate > 0.1) {
                 distribution_tv_2.setText(timeFormat(useTime / sportMile));
@@ -313,6 +318,42 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
 
         pathSmoothTool = new PathSmoothTool();
         pathSmoothTool.setIntensity(4);
+    }
+
+    //退出的dialog
+    private void initDialog() {
+        AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
+        alterDialog.setCancelable(false);
+        alterDialog.setTitle("运动已完成，是否现在上传？");
+        alterDialog.setNegativeButton("稍后上传", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DbRecord dbRecord = new DbRecord();
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                String format = decimalFormat.format(pathRecord.getDistance());
+                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
+                String format1 = decimalFormat1.format(pathRecord.getDuration());
+
+                dbRecord.setRunTime(format1);
+                dbRecord.setRunWhen(getCurrentTime());
+                dbRecord.setDistance(format);
+                DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                finish();
+            }
+        });
+        alterDialog.setPositiveButton("现在上传", new DialogInterface.OnClickListener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DbManger.getInstance(getApplicationContext()).getAll().subscribe(new Consumer<List<DbRecord>>() {
+                    @Override
+                    public void accept(List<DbRecord> list) throws Exception {
+                        Log.d("TAG", "accept: " + list.get(0).getRunWhen());
+                    }
+                });
+            }
+        });
+        alterDialog.show();
     }
 
     //初始化地图

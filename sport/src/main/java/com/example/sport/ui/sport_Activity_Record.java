@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.sport.R;
 
-public class sport_Activity_Target extends AppCompatActivity {
+public class sport_Activity_Record extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sport_target);
+        setContentView(R.layout.activity_sport_record);
     }
 }

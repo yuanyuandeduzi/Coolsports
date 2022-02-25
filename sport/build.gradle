@@ -17,6 +17,14 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                //room的数据库概要、记录
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -39,6 +47,7 @@ android {
 
 dependencies {
     implementation project(":Baselibs")
+    annotationProcessor "androidx.room:room-compiler:2.4.1"
 
     implementation fileTree(dir: 'libs', include:['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.4.1'

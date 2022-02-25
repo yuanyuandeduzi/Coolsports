@@ -1,8 +1,12 @@
 package com.example.sport.ui;
 
+import static com.example.sport.util.TimeUtil.getCurrentTime;
+import static com.example.sport.util.TimeUtil.stringToTime;
 import static com.example.sport.util.TimeUtil.timeToString;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,18 +16,24 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -32,9 +42,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sport.R;
+import com.example.sport.db.DbManger;
+import com.example.sport.db.DbRecord;
+import com.example.sport.record.PathRecord;
 import com.example.sport.view.MyProgressButton;
+import com.example.sport.view.PickerView;
 
-public class sport_Activity_Room extends AppCompatActivity implements SensorEventListener {
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.functions.Consumer;
+
+public class sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 
     //控件
     private TextView tv_1;
@@ -43,6 +63,9 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
     private MyProgressButton mButtonEnd;
     private FrameLayout frameLayout;
     private TextView tv_animation;
+    private TextView tv_length;
+    private Button bt_setLength;
+
 
     //判断
     private boolean isStart = false;
@@ -51,11 +74,14 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
     private long recordTime = 0;
     private int recordStep = 0;
     private int stepStart = 0;
+    private PathRecord pathRecord = new PathRecord();
+
 
     //对象
     private SensorManager sensorManager;
     private Sensor sensor;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,10 +109,9 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         mButtonEnd.setListener(new MyProgressButton.MyProgressButtonFinishCallback() {
             @Override
             public void isFinish() {
-                Intent intent = new Intent();
-                intent.putExtra("JJ", "Activity_Room");
-                setResult(2, intent);
-                finish();
+                pathRecord.setDuration(stringToTime(ch_time.getText().toString()));
+                pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 1000f);
+                initDialog();
             }
 
             @Override
@@ -97,7 +122,6 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-
     }
 
     @Override
@@ -116,7 +140,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         }
         int step = (int) (sensorEvent.values[0] - stepStart);
         //float value = sensorEvent.values[0];
-        tv_1.setText(String.valueOf((int)step));
+        tv_1.setText(String.valueOf((int) step));
     }
 
     //初始化组件
@@ -126,17 +150,24 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         mButtonEnd = findViewById(R.id.bt_room_end);
         frameLayout = findViewById(R.id.layout_room_animation);
         tv_animation = findViewById(R.id.tv_room_animation);
+        tv_length = findViewById(R.id.tv_room_length);
+        bt_setLength = findViewById(R.id.bt_room_length);
+        bt_setLength.setOnClickListener(this);
         bt_1 = findViewById(R.id.bt_1);
-        bt_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        bt_1.setOnClickListener(this);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.bt_1:
                 if (isStart) {
                     bt_1.setText("继续");
                     mButtonEnd.setVisibility(View.VISIBLE);
                     recordTime = SystemClock.elapsedRealtime() - ch_time.getBase();
                     sensorManager.unregisterListener(sport_Activity_Room.this);
                     recordStep = Integer.parseInt((String) tv_1.getText());
-                    Log.d("TAG", "onClick: " + tv_1.getText());
                     isFirst = true;
                     ch_time.stop();
                     isStart = false;
@@ -148,8 +179,11 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                     ch_time.start();
                     isStart = true;
                 }
-            }
-        });
+                break;
+            case R.id.bt_room_length:
+                openDialog();
+                break;
+        }
     }
 
     @Override
@@ -168,6 +202,70 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 }
                 createAnimation();
         }
+    }
+    //退出的dialog
+    private void initDialog() {
+        AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
+        alterDialog.setCancelable(false);
+        alterDialog.setTitle("运动已完成，是否现在上传？");
+        alterDialog.setNegativeButton("稍后上传", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DbRecord dbRecord = new DbRecord();
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                String format = decimalFormat.format(pathRecord.getDistance());
+                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
+                String format1 = decimalFormat1.format(pathRecord.getDuration());
+
+                dbRecord.setRunTime(format1);
+                dbRecord.setRunWhen(getCurrentTime());
+                dbRecord.setDistance(format);
+                DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                finish();
+            }
+        });
+        alterDialog.setPositiveButton("现在上传", new DialogInterface.OnClickListener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DbManger.getInstance(getApplicationContext()).getAll().subscribe(new Consumer<List<DbRecord>>() {
+                    @Override
+                    public void accept(List<DbRecord> list) throws Exception {
+                        Log.d("TAG", "accept: " + list.get(0).getRunWhen());
+                    }
+                });
+            }
+        });
+        alterDialog.show();
+    }
+
+
+    //设置步幅的dialog
+    private void openDialog() {
+        Dialog dialog = new Dialog(this, R.style.MyDialog);
+        View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_item, null);
+        PickerView pickerView = inflate.findViewById(R.id.pickerView);
+        List<String> data = new ArrayList<>();
+        for (int i = 60; i < 90; i++) {
+            data.add(i + "cm");
+        }
+        pickerView.setData(data);
+        pickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                String s = text.substring(0, text.length() - 2);
+                pathRecord.setStride(Float.parseFloat(text));
+                tv_length.setText("步幅：" + text);
+            }
+        });
+        dialog.setContentView(inflate);
+        //设置dialog位置
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.y = 20;
+        window.setAttributes(attributes);
+        dialog.show();
     }
 
     //起始动画
@@ -213,6 +311,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 super.onAnimationEnd(animation);
                 frameLayout.setVisibility(View.GONE);
                 bt_1.setVisibility(View.VISIBLE);
+                bt_setLength.setVisibility(View.VISIBLE);
                 ch_time.setBase(SystemClock.elapsedRealtime());
                 isStart = true;
                 ch_time.start();

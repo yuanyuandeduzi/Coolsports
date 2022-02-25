@@ -135,14 +135,7 @@ public class MyProgressButton extends View {
         canvas.drawCircle(mXCenter, mYCenter, mBigCircleRadius, mCirclePaint);
         canvas.drawText(mTextContent,mXCenter - 80,mYCenter + 30,mTextPaint);
 
-        if (mProgress == 300) {
-            RectF oval = new RectF();
-            oval.left = (mXCenter - mRingRadius);
-            oval.top = (mYCenter - mRingRadius);
-            oval.right = mRingRadius + mXCenter;
-            oval.bottom = mRingRadius + mYCenter;
-            canvas.drawArc(oval, -90, 360, false, mCirclePaint);
-        } else if (mProgress > 0) {
+        if(mProgress > 0) {
             @SuppressLint("DrawAllocation") RectF rectF = new RectF();
             rectF.left = mXCenter - mRingRadius;
             rectF.right = mXCenter + mRingRadius;

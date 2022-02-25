@@ -12,10 +12,12 @@
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/drawable/shape_background_run.xml" value="0.2212962962962963" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/drawable/shape_record_bg1.xml" value="0.17229729729729729" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_out_room.xml" value="0.24947916666666667" />
-        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_room.xml" value="0.24947916666666667" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_room.xml" value="0.2" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/activity_sport_target.xml" value="0.16182432432432434" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/dialog_item.xml" value="0.1" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/recrview_item1.xml" value="0.16182432432432434" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/sport_activity_main.xml" value="0.176" />
+        <entry key="..\:/Android_file/Coolsports/sport/src/main/res/layout/sport_fragment_location.xml" value="0.16182432432432434" />
       </map>
     </option>
   </component>

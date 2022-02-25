@@ -1,7 +1,18 @@
 package com.example.sport.util;
 
+import android.annotation.SuppressLint;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.widget.Chronometer;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TimeUtil {
 
@@ -18,13 +29,13 @@ public class TimeUtil {
     }
 
     //字符串获取分钟
-    public static double stringToTime(String s) {
+    public static float stringToTime(String s) {
         String[] split = s.split(":");
-        return Double.parseDouble(split[0]) * 60L + Double.parseDouble(split[1]) + Double.parseDouble(split[2]) / 60L;
+        return Float.parseFloat(split[0]) * 60f + Float.parseFloat(split[1]) + Float.parseFloat(split[2]) / 60f;
     }
 
     //用于速度的时间转换
-    public static String timeFormat(double time) {
+    public static String timeFormat(float time) {
         String result = "";
         int m = (int) time;
         int s = (int) ((time - m) * 60);
@@ -34,5 +45,11 @@ public class TimeUtil {
             result += m + "′" + s + "″";
         }
         return result;
+    }
+
+    public static String getCurrentTime() {
+        Date date = new Date();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("y-M-d H:m:s");
+        return simpleDateFormat.format(date);
     }
 }
