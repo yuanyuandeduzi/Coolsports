@@ -121,6 +121,9 @@ public class sport_MainActivity extends AppCompatActivity implements View.OnClic
                 openDialog();
                 break;
             case R.id.bt_record:
+                Intent intent = new Intent(sport_MainActivity.this,sport_Activity_Record.class);
+                activityLauncher.launch(intent);
+                break;
 
         }
     }

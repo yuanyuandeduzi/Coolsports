@@ -11,6 +11,9 @@ public class DbRecord {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    public DbRecord() {
+    }
+
     private String distance = "";
     private String runTime = "";
     private String runWhen = "";

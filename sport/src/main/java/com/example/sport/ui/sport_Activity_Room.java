@@ -254,7 +254,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
             @Override
             public void onSelect(String text) {
                 String s = text.substring(0, text.length() - 2);
-                pathRecord.setStride(Float.parseFloat(text));
+                pathRecord.setStride(Float.parseFloat(s));
                 tv_length.setText("步幅：" + text);
             }
         });
