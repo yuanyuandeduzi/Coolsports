@@ -45,10 +45,10 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/tv_1"
+            android:id="@+id/tv_sport_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_sport_out"
             android:text="0.00"
             android:textColor="@color/text_color_1"
             android:textSize="26sp"
@@ -64,8 +64,8 @@
             android:text="公里"
             android:textColor="@color/text_color_2"
             android:textSize="@dimen/textSize_4"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_1"
-            app:layout_constraintLeft_toRightOf="@id/tv_1" />
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_sport_out"
+            app:layout_constraintLeft_toRightOf="@id/tv_sport_out" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,9 +74,9 @@
             android:textColor="@color/black"
             android:textSize="@dimen/textSize_4"
             android:layout_marginTop="15dp"
-            app:layout_constraintLeft_toLeftOf="@+id/tv_1"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_sport_out"
             app:layout_constraintRight_toRightOf="@id/tv_3"
-            app:layout_constraintTop_toBottomOf="@id/tv_1"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_sport_out"/>
 
         <TextView
             android:id="@+id/tv_2"
@@ -85,8 +85,8 @@
             android:text="0′00″"
             android:textColor="@color/text_color_1"
             android:textSize="26sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_1"
-            app:layout_constraintLeft_toRightOf="@id/tv_1"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_sport_out"
+            app:layout_constraintLeft_toRightOf="@id/tv_sport_out"
             app:layout_constraintRight_toRightOf="parent" />
 
         <TextView

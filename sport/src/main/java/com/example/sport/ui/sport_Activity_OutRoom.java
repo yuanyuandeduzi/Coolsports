@@ -18,7 +18,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -179,7 +178,7 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
     //初始化控件
     private void initControl() {
         ch_1 = findViewById(R.id.ch_sport);
-        distance_tv_1 = findViewById(R.id.tv_1);
+        distance_tv_1 = findViewById(R.id.tv_sport_out);
         distribution_tv_2 = findViewById(R.id.tv_2);
         animation_tv = findViewById(R.id.tv_animation);
         frameLayout = findViewById(R.id.animation_layout);
@@ -272,16 +271,19 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         }
         pathRecord.addLaLng(new LatLng(location.getLatitude(), location.getLongitude()));
         distance = getDistance(pathRecord.getPathLinePoints());
-        pathRecord.setDistance((float) distance);
+        pathRecord.setDistance((float) distance / 1000f);
         //计算配速
         float sportMile = (float) distance / 1000f;
         float useTime = stringToTime(ch_1.getText().toString());
-        if (sportMile > 0.05 && useTime > 0.2) {
-            if (useTime - lastUpdate > 0.1) {
+        if (sportMile > 0.005 && useTime > 0.1) {
+            if (useTime - lastUpdate > 0.05) {
                 distribution_tv_2.setText(timeFormat(useTime / sportMile));
                 lastUpdate = useTime;
             }
-            distance_tv_1.setText(String.valueOf(sportMile).substring(0, 3));
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            String format = decimalFormat.format(sportMile);
+            distance_tv_1.setText(format);
         }
         sportLatLngs.clear();
         //轨迹平滑处理

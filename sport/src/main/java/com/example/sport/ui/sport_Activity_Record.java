@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 
 import com.example.sport.R;
 import com.example.sport.fragment.sport_fragment_location;
+import com.example.sport.fragment.sport_fragment_upload;
 import com.example.sport.util.DeleteUtil;
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,7 +36,7 @@ public class sport_Activity_Record extends AppCompatActivity implements View.OnC
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
         initControl();
-        replaceFragment(new sport_fragment_location());
+        replaceFragment(new sport_fragment_upload());
 
         DeleteUtil.getInstance().setListener(new DeleteUtil.DeleteListener() {
             @Override
@@ -59,7 +61,28 @@ public class sport_Activity_Record extends AppCompatActivity implements View.OnC
         tabLayout = findViewById(R.id.tabLayout_record);
         tabLayout.addTab(tabLayout.newTab().setText("已上传"));
         tabLayout.addTab(tabLayout.newTab().setText("待上传"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int id = tab.getPosition();
+                Log.d("TAG", "onTabSelected: " + id);
+                if(id == 0) {
+                    replaceFragment(new sport_fragment_upload());
+                }else {
+                    replaceFragment(new sport_fragment_location());
+                }
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         im_checkAll = findViewById(R.id.im_checkAll);
         bt_delete = findViewById(R.id.bt_delete_location);
         im_checkAll.setOnClickListener(this);

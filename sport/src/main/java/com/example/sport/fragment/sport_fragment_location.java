@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,14 +29,12 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class sport_fragment_location extends Fragment implements View.OnClickListener {
+public class sport_fragment_location extends Fragment{
 
-    private Button bt_delete;
-    private ImageView im_checkAll;
     private RecyclerView recyclerView;
     private Location_Adapter_Rc location_adapter_rc;
     private List<DbRecord> mList = new ArrayList<>();
-
+    private TextView tv_noRecord;
 
     @Nullable
     @Override
@@ -55,30 +54,20 @@ public class sport_fragment_location extends Fragment implements View.OnClickLis
             public void accept(List<DbRecord> list) throws Exception {
                 mList.clear();
                 mList.addAll(list);
+                if(list.size() > 0) {
+                    tv_noRecord.setVisibility(View.INVISIBLE);
+                }else {
+                    tv_noRecord.setVisibility(View.VISIBLE);
+                }
                 location_adapter_rc.notifyDataSetChanged();
             }
         });
 
-        /*DeleteUtil.getInstance().setListener(new DeleteUtil.DeleteListener() {
-            @Override
-            public void isVisibility() {
-                bt_delete.setVisibility(View.VISIBLE);
-                im_checkAll.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void isUnVisibility() {
-                bt_delete.setVisibility(View.GONE);
-                im_checkAll.setVisibility(View.GONE);
-            }
-        });*/
     }
 
     private void initControl(View view) {
-        /*im_checkAll = view.findViewById(R.id.im_checkAll);
-        bt_delete = view.findViewById(R.id.bt_delete_location);
-        im_checkAll.setOnClickListener(this);
-        bt_delete.setOnClickListener(this);*/
+
+        tv_noRecord = view.findViewById(R.id.tv_fragment_location);
 
         recyclerView = view.findViewById(R.id.rv_fragment_location);
         location_adapter_rc = new Location_Adapter_Rc(mList);
@@ -88,22 +77,4 @@ public class sport_fragment_location extends Fragment implements View.OnClickLis
         recyclerView.setAdapter(location_adapter_rc);
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View view) {
-        /*switch (view.getId()) {
-            case R.id.bt_delete_location:
-                break;
-            case R.id.im_checkAll:
-                if (!DeleteUtil.getInstance().isCheck()) {
-                    im_checkAll.setImageResource(R.drawable.im_check_2);
-                    DeleteUtil.getInstance().setCheckAll(true);
-                    DeleteUtil.getInstance().setCheck(true);
-                } else {
-                    im_checkAll.setImageResource(R.drawable.im_check_1);
-                    DeleteUtil.getInstance().setCheckAll(false);
-                    DeleteUtil.getInstance().setCheck(false);
-                }
-        }*/
-    }
 }
