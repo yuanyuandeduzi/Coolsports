@@ -151,7 +151,7 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
 
     //开启定位服务
     private void toLocate() {
-        aMap = mapView.getMap();
+        //aMap = mapView.getMap();
         pathRecord = new PathRecord();
 
         createAnimation();

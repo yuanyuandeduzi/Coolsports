@@ -10,8 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.sport.R;
+import com.example.sport.db.DbRecord;
+
+import java.util.List;
 
 public class sport_fragment_upload extends Fragment {
+
+    private List<DbRecord> mList;
 
     @Nullable
     @Override

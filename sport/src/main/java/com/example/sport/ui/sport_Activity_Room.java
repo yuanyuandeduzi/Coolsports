@@ -44,15 +44,24 @@ import android.widget.Toast;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
+import com.example.sport.network.ApiService;
+import com.example.sport.network.RunMessage;
+import com.example.sport.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.view.MyProgressButton;
 import com.example.sport.view.PickerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.functions.Consumer;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Headers;
 
 public class sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 
@@ -75,7 +84,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
     private int recordStep = 0;
     private int stepStart = 0;
     private PathRecord pathRecord = new PathRecord();
-
+    private DbRecord dbRecord;
 
     //对象
     private SensorManager sensorManager;
@@ -110,7 +119,19 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
             @Override
             public void isFinish() {
                 pathRecord.setDuration(stringToTime(ch_time.getText().toString()));
+                pathRecord.setSteps(Integer.parseInt(tv_1.getText().toString()));
                 pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 1000f);
+
+                dbRecord = new DbRecord();
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                String format = decimalFormat.format(pathRecord.getDistance());
+                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
+                String format1 = decimalFormat1.format(pathRecord.getDuration());
+
+                dbRecord.setRunTime(format1);
+                dbRecord.setRunWhen(getCurrentTime());
+                dbRecord.setDistance(format);
+
                 initDialog();
             }
 
@@ -203,6 +224,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 createAnimation();
         }
     }
+
     //退出的dialog
     private void initDialog() {
         AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
@@ -211,15 +233,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         alterDialog.setNegativeButton("稍后上传", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                DbRecord dbRecord = new DbRecord();
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                String format = decimalFormat.format(pathRecord.getDistance());
-                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
-                String format1 = decimalFormat1.format(pathRecord.getDuration());
 
-                dbRecord.setRunTime(format1);
-                dbRecord.setRunWhen(getCurrentTime());
-                dbRecord.setDistance(format);
                 DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                 finish();
             }
@@ -228,12 +242,25 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                DbManger.getInstance(getApplicationContext()).getAll().subscribe(new Consumer<List<DbRecord>>() {
+                Map<String, String> map = new HashMap<>();
+                map.put("runTime", dbRecord.getRunTime());
+                map.put("runWhen", dbRecord.getRunWhen());
+                map.put("distance", dbRecord.getDistance());
+                UploadUtil util = new UploadUtil();
+                ApiService postService = util.getPostService();
+                postService.postCall("run/addRunRecord", map).enqueue(new Callback<RunMessage>() {
                     @Override
-                    public void accept(List<DbRecord> list) throws Exception {
-                        Log.d("TAG", "accept: " + list.get(0).getRunWhen());
+                    public void onResponse(Call<RunMessage> call, Response<RunMessage> response) {
+                        RunMessage body = response.body();
+                        Log.d("TAG", "onResponse: " + body.getMessage());
+                    }
+
+                    @Override
+                    public void onFailure(Call<RunMessage> call, Throwable t) {
+                        Log.d("TAG", "onFailure: " + t.getMessage());
                     }
                 });
+
             }
         });
         alterDialog.show();
