@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -52,6 +53,13 @@ public class sport_Activity_Record extends AppCompatActivity implements View.OnC
                 bt_delete.setVisibility(View.GONE);
                 im_checkAll.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void setImageView(int n, boolean bool) {
+                im_checkAll.setImageResource(n);
+                //DeleteUtil.getInstance().setCheckAll(bool);
+                DeleteUtil.getInstance().setCheck(bool);
             }
         });
 
@@ -115,5 +123,11 @@ public class sport_Activity_Record extends AppCompatActivity implements View.OnC
                     DeleteUtil.getInstance().setCheck(false);
                 }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        DeleteUtil.getInstance().setMapClear();
+        return super.onKeyDown(keyCode, event);
     }
 }

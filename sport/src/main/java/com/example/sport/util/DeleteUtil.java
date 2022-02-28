@@ -16,8 +16,10 @@ import io.reactivex.functions.Consumer;
 public class DeleteUtil {
 
     private static DeleteUtil sInstance;
+    //判断是否为全选
     private boolean isCheck = false;
     private Map<Location_Adapter_Rc.ViewHolder, DbRecord> map = new HashMap<>();
+    private int len = 0;
 
     public static DeleteUtil getInstance() {
         if (sInstance == null) {
@@ -30,8 +32,20 @@ public class DeleteUtil {
         return sInstance;
     }
 
+    public int getLen() {
+        return len;
+    }
+
+    public void setLen(int len) {
+        this.len = len;
+    }
+
     public void addView(Location_Adapter_Rc.ViewHolder viewHolder, DbRecord dbRecord) {
         map.put(viewHolder, dbRecord);
+    }
+
+    public void setMapClear() {
+        map.clear();
     }
 
     public void setVisibility() {
@@ -48,10 +62,16 @@ public class DeleteUtil {
         }
         listener.isUnVisibility();
         isCheck = false;
+        len = 0;
     }
 
     public void setCheckAll(boolean bool) {
         for (Location_Adapter_Rc.ViewHolder viewHolder : map.keySet()) {
+            if(!viewHolder.checkBox.isChecked() && bool) {
+                len++;
+            }else if (viewHolder.checkBox.isChecked() && !bool){
+                len--;
+            }
             viewHolder.checkBox.setChecked(bool);
         }
     }
@@ -78,6 +98,14 @@ public class DeleteUtil {
         }
     }
 
+    public Map<Location_Adapter_Rc.ViewHolder, DbRecord> getMap() {
+        return map;
+    }
+
+    public void setImageView(int n, boolean bool) {
+        listener.setImageView(n,bool);
+    }
+
     //给外面接口
     private DeleteListener listener;
     public void setListener(DeleteListener listener) {
@@ -87,5 +115,6 @@ public class DeleteUtil {
     public interface DeleteListener {
         void isVisibility();
         void isUnVisibility();
+        void setImageView(int n, boolean bool);
     }
 }

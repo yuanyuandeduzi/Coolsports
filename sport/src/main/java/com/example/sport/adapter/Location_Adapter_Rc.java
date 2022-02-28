@@ -1,5 +1,6 @@
 package com.example.sport.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
             @Override
             public boolean onLongClick(View view) {
                 DeleteUtil.getInstance().setVisibility();
+                DeleteUtil.getInstance().setLen(0);
                 return true;
             }
         });
@@ -49,6 +51,26 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
                 DeleteUtil.getInstance().setInVisibility();
             }
         });
+
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.checkBox.isChecked()) {
+                    DeleteUtil.getInstance().setLen(DeleteUtil.getInstance().getLen() + 1);
+                }else {
+                    DeleteUtil.getInstance().setLen(DeleteUtil.getInstance().getLen() - 1);
+                }
+
+                Log.d("TAG", "onClick: " + DeleteUtil.getInstance().getMap().keySet().size());
+
+                if(DeleteUtil.getInstance().getLen() == DeleteUtil.getInstance().getMap().keySet().size()) {
+                    DeleteUtil.getInstance().setImageView(R.drawable.im_check_2,true);
+                }else {
+                    DeleteUtil.getInstance().setImageView(R.drawable.im_check_1,false);
+                }
+            }
+        });
+
         DeleteUtil.getInstance().addView(holder,mList.get(position));
     }
 
