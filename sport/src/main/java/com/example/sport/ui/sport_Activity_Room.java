@@ -28,7 +28,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,7 +45,6 @@ import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
 import com.example.sport.network.ApiService;
-import com.example.sport.network.RunMessage;
 import com.example.sport.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.view.MyProgressButton;
@@ -58,11 +56,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Headers;
 
 public class sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 

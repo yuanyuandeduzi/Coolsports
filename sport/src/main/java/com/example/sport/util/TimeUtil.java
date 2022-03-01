@@ -49,7 +49,7 @@ public class TimeUtil {
 
     public static String getCurrentTime() {
         Date date = new Date();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("y-M-d H:m:s");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(date);
     }
 }
