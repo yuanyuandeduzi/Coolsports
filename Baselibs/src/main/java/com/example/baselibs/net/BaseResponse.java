@@ -1,8 +1,15 @@
 package com.example.baselibs.net;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.nio.charset.StandardCharsets;
+
 public class BaseResponse<T> implements IRespose<T> {
+    @SerializedName("msg")
     String msg;
+    @SerializedName("data")
     T data;
+    @SerializedName("status")
     String code;
 
     @Override
@@ -22,6 +29,6 @@ public class BaseResponse<T> implements IRespose<T> {
 
     @Override
     public boolean isSuccess() {
-        return false;
+        return code.equals("0");
     }
 }

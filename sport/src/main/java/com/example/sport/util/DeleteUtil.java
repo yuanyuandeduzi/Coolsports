@@ -20,6 +20,8 @@ public class DeleteUtil {
     private boolean isCheck = false;
     private Map<Location_Adapter_Rc.ViewHolder, DbRecord> map = new HashMap<>();
     private int len = 0;
+    //判断是不是处于选择阶段
+    private boolean isDelete = false;
 
     public static DeleteUtil getInstance() {
         if (sInstance == null) {
@@ -53,6 +55,7 @@ public class DeleteUtil {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
         }
         listener.isVisibility();
+        isDelete = true;
     }
 
     public void setInVisibility() {
@@ -63,6 +66,7 @@ public class DeleteUtil {
         listener.isUnVisibility();
         isCheck = false;
         len = 0;
+        isDelete = false;
     }
 
     public void setCheckAll(boolean bool) {
@@ -74,6 +78,14 @@ public class DeleteUtil {
             }
             viewHolder.checkBox.setChecked(bool);
         }
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 
     public boolean isCheck() {

@@ -73,7 +73,6 @@ public class sport_Activity_Record extends AppCompatActivity implements View.OnC
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int id = tab.getPosition();
-                Log.d("TAG", "onTabSelected: " + id);
                 if(id == 0) {
                     replaceFragment(new sport_fragment_upload());
                 }else {

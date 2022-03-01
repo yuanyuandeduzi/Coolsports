@@ -41,6 +41,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
@@ -233,7 +234,6 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         alterDialog.setNegativeButton("稍后上传", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
                 DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                 finish();
             }
@@ -246,21 +246,31 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
+                map.put("uid","1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
-                postService.postCall("run/addRunRecord", map).enqueue(new Callback<RunMessage>() {
+                postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
-                    public void onResponse(Call<RunMessage> call, Response<RunMessage> response) {
-                        RunMessage body = response.body();
-                        Log.d("TAG", "onResponse: " + body.getMessage());
+                    public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                        if (response.body() == null) {
+                            DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                            Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (response.body().isSuccess()) {
+                            Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<RunMessage> call, Throwable t) {
-                        Log.d("TAG", "onFailure: " + t.getMessage());
+                    public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+                        DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                        Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 });
-
+                finish();
             }
         });
         alterDialog.show();

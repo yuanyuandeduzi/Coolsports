@@ -43,18 +43,26 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
+import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
+import com.example.sport.network.ApiService;
+import com.example.sport.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.util.PathSmoothTool;
 import com.example.sport.view.MyProgressButton;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.functions.Consumer;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.OnMyLocationChangeListener, View.OnClickListener {
 
@@ -69,6 +77,7 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
     private double distance;
     private long recordTime = 0;
     private double lastUpdate;
+    private DbRecord dbRecord;
 
     //判断
     private boolean isStart = false;
@@ -113,6 +122,18 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
             @Override
             public void isFinish() {
                 pathRecord.setDuration(stringToTime(ch_1.getText().toString()));
+
+                dbRecord = new DbRecord();
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                String format = decimalFormat.format(pathRecord.getDistance());
+                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
+                String format1 = decimalFormat1.format(pathRecord.getDuration());
+
+                dbRecord.setRunTime(format1);
+                dbRecord.setRunWhen(getCurrentTime());
+                dbRecord.setDistance(format);
+
+
                 initDialog();
             }
 
@@ -330,15 +351,6 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         alterDialog.setNegativeButton("稍后上传", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                DbRecord dbRecord = new DbRecord();
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                String format = decimalFormat.format(pathRecord.getDistance());
-                DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
-                String format1 = decimalFormat1.format(pathRecord.getDuration());
-
-                dbRecord.setRunTime(format1);
-                dbRecord.setRunWhen(getCurrentTime());
-                dbRecord.setDistance(format);
                 DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                 finish();
             }
@@ -347,12 +359,35 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                DbManger.getInstance(getApplicationContext()).getAll().subscribe(new Consumer<List<DbRecord>>() {
+                Map<String, String> map = new HashMap<>();
+                map.put("runTime", dbRecord.getRunTime());
+                map.put("runWhen", dbRecord.getRunWhen());
+                map.put("distance", dbRecord.getDistance());
+                map.put("uid","1");
+                UploadUtil util = new UploadUtil();
+                ApiService postService = util.getPostService();
+                postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
-                    public void accept(List<DbRecord> list) throws Exception {
-                        Log.d("TAG", "accept: " + list.get(0).getRunWhen());
+                    public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                        if (response.body() == null) {
+                            DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                            Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (response.body().isSuccess()) {
+                            Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+                        DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
+                        Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 });
+                finish();
             }
         });
         alterDialog.show();
