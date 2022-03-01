@@ -28,6 +28,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -60,7 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
+public class Sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 
     //控件
     private TextView tv_1;
@@ -74,8 +75,9 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
 
 
     //判断
-    private boolean isStart = false;
+    private boolean isStart = true;
     private boolean isFirst = true;
+    private boolean isBegin = true;
     //记录
     private long recordTime = 0;
     private int recordStep = 0;
@@ -99,8 +101,8 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
 
         initControl();
 
-        if (ContextCompat.checkSelfPermission(sport_Activity_Room.this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(sport_Activity_Room.this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 1);
+        if (ContextCompat.checkSelfPermission(Sport_Activity_Room.this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Sport_Activity_Room.this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 1);
         } else {
             createAnimation();
         }
@@ -117,7 +119,8 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
             public void isFinish() {
                 pathRecord.setDuration(stringToTime(ch_time.getText().toString()));
                 pathRecord.setSteps(Integer.parseInt(tv_1.getText().toString()));
-                pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 1000f);
+                Log.d("TAG", "isFinish: " + pathRecord.getSteps());
+                pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 100000f);
 
                 dbRecord = new DbRecord();
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -150,17 +153,6 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
         }
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        if (isFirst) {
-            stepStart = (int) sensorEvent.values[0] - recordStep;
-            isFirst = false;
-        }
-        int step = (int) (sensorEvent.values[0] - stepStart);
-        //float value = sensorEvent.values[0];
-        tv_1.setText(String.valueOf((int) step));
-    }
-
     //初始化组件
     private void initControl() {
         tv_1 = findViewById(R.id.tv_sum_leg);
@@ -184,14 +176,13 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                     bt_1.setText("继续");
                     mButtonEnd.setVisibility(View.VISIBLE);
                     recordTime = SystemClock.elapsedRealtime() - ch_time.getBase();
-                    sensorManager.unregisterListener(sport_Activity_Room.this);
+                    //sensorManager.unregisterListener(sport_Activity_Room.this);
                     recordStep = Integer.parseInt((String) tv_1.getText());
-                    isFirst = true;
                     ch_time.stop();
                     isStart = false;
                 } else {
                     bt_1.setText("暂停");
-                    sensorManager.registerListener(sport_Activity_Room.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+                    sensorManager.registerListener(Sport_Activity_Room.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
                     mButtonEnd.setVisibility(View.INVISIBLE);
                     ch_time.setBase(SystemClock.elapsedRealtime() - recordTime);
                     ch_time.start();
@@ -205,6 +196,23 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
     }
 
     @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (isFirst) {
+            stepStart = (int) sensorEvent.values[0];
+            isFirst = false;
+        }
+        Log.d("TAG", "onSensorChanged: " + stepStart);
+        if (isStart) {
+            int step = (int) (sensorEvent.values[0] - stepStart);
+            tv_1.setText(String.valueOf(step));
+            //float value = sensorEvent.values[0];
+        } else {
+            stepStart = (int) (sensorEvent.values[0] - recordStep);
+        }
+    }
+
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
@@ -212,7 +220,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(sport_Activity_Room.this, "请授权！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Sport_Activity_Room.this, "请授权！", Toast.LENGTH_SHORT).show();
                             finish();
                             return;
                         }
@@ -242,7 +250,7 @@ public class sport_Activity_Room extends AppCompatActivity implements SensorEven
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
-                map.put("uid","1");
+                map.put("uid", "1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
                 postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {

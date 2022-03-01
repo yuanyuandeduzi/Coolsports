@@ -64,7 +64,7 @@ public class PathRecord{
     public void addLaLng(LatLng latLng) {
         pathLinePoints.add(latLng);
     }
+
     public PathRecord() {
     }
-
 }

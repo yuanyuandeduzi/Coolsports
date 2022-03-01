@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Coolsports">
         <activity
-            android:name=".MainActivity"
+            android:name=".App_MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

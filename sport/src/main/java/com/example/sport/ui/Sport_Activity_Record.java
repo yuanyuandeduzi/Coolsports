@@ -20,7 +20,7 @@ import com.example.sport.fragment.sport_fragment_upload;
 import com.example.sport.util.DeleteUtil;
 import com.google.android.material.tabs.TabLayout;
 
-public class sport_Activity_Record extends AppCompatActivity implements View.OnClickListener {
+public class Sport_Activity_Record extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private Button bt_delete;

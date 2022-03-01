@@ -33,11 +33,11 @@
         android:theme="@style/Theme.Coolsports"
         >
 
-        <activity android:name=".ui.sport_Activity_Record"
+        <activity android:name=".ui.Sport_Activity_Record"
             android:exported="true"/>
 
         <activity
-            android:name=".ui.sport_Activity_OutRoom"
+            android:name=".ui.Sport_Activity_OutRoom"
             android:exported="false" />
 
         <service android:name="com.amap.api.location.APSService" />
@@ -47,10 +47,10 @@
             android:value="077aca57240396afbc870fa5bc2e6f16" />
 
         <activity
-            android:name=".ui.sport_Activity_Room"
+            android:name=".ui.Sport_Activity_Room"
             android:exported="false" />
         <activity
-            android:name=".ui.sport_MainActivity"
+            android:name=".ui.Sport_MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

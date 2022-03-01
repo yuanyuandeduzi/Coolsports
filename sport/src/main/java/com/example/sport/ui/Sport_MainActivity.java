@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import com.example.sport.view.PickerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sport_MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class Sport_MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ActivityResultLauncher<Intent> activityLauncher;
     private Button mButton_room;
@@ -110,18 +109,18 @@ public class sport_MainActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.run_outRoom:
-                Intent intent1 = new Intent(sport_MainActivity.this, sport_Activity_OutRoom.class);
+                Intent intent1 = new Intent(Sport_MainActivity.this, Sport_Activity_OutRoom.class);
                 activityLauncher.launch(intent1);
                 break;
             case R.id.run_room:
-                Intent intent2 = new Intent(sport_MainActivity.this, sport_Activity_Room.class);
+                Intent intent2 = new Intent(Sport_MainActivity.this, Sport_Activity_Room.class);
                 activityLauncher.launch(intent2);
                 break;
             case R.id.bt_target:
                 openDialog();
                 break;
             case R.id.bt_record:
-                Intent intent = new Intent(sport_MainActivity.this,sport_Activity_Record.class);
+                Intent intent = new Intent(Sport_MainActivity.this, Sport_Activity_Record.class);
                 activityLauncher.launch(intent);
                 break;
 

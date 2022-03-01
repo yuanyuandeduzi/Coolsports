@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -59,12 +58,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.OnMyLocationChangeListener, View.OnClickListener {
+public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.OnMyLocationChangeListener, View.OnClickListener {
 
     protected static MapView mapView;
     private AMap aMap;
@@ -284,38 +282,6 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
     }
 
 
-    //更新路径
-    @SuppressLint("SetTextI18n")
-    private void updateLocation(Location location) {
-        if (location.getLatitude() == 0 && location.getLongitude() == 0) {
-            return;
-        }
-        pathRecord.addLaLng(new LatLng(location.getLatitude(), location.getLongitude()));
-        distance = getDistance(pathRecord.getPathLinePoints());
-        pathRecord.setDistance((float) distance / 1000f);
-        //计算配速
-        float sportMile = (float) distance / 1000f;
-        float useTime = stringToTime(ch_1.getText().toString());
-        if (sportMile > 0.005 && useTime > 0.1) {
-            if (useTime - lastUpdate > 0.05) {
-                distribution_tv_2.setText(timeFormat(useTime / sportMile));
-                lastUpdate = useTime;
-            }
-
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String format = decimalFormat.format(sportMile);
-            distance_tv_1.setText(format);
-        }
-        sportLatLngs.clear();
-        //轨迹平滑处理
-        sportLatLngs = new ArrayList<>(pathSmoothTool.pathOptimize(pathRecord.getPathLinePoints()));
-
-        if (!sportLatLngs.isEmpty()) {
-            polylineOptions.add(sportLatLngs.get(sportLatLngs.size() - 1));
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
-        }
-        aMap.addPolyline(polylineOptions);
-    }
 
     //计算总距离
     private double getDistance(List<LatLng> list) {
@@ -420,13 +386,47 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         uiSettings.setZoomControlsEnabled(false);
     }
 
+    //更新路径
+    @SuppressLint("SetTextI18n")
+    private void updateLocation(Location location) {
+        if (location.getLatitude() == 0 && location.getLongitude() == 0) {
+            return;
+        }
+        pathRecord.addLaLng(new LatLng(location.getLatitude(), location.getLongitude()));
+        distance = getDistance(pathRecord.getPathLinePoints());
+        pathRecord.setDistance((float) distance / 1000f);
+        //计算配速
+        float sportMile = (float) distance / 1000f;
+        float useTime = stringToTime(ch_1.getText().toString());
+        if (sportMile > 0.005 && useTime > 0.1) {
+            if (useTime - lastUpdate > 0.05) {
+                distribution_tv_2.setText(timeFormat(useTime / sportMile));
+                lastUpdate = useTime;
+            }
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            String format = decimalFormat.format(sportMile);
+            distance_tv_1.setText(format);
+        }
+        sportLatLngs.clear();
+        //轨迹平滑处理
+        sportLatLngs = new ArrayList<>(pathSmoothTool.pathOptimize(pathRecord.getPathLinePoints()));
+
+        if (!sportLatLngs.isEmpty()) {
+            polylineOptions.add(sportLatLngs.get(sportLatLngs.size() - 1));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
+        }
+        aMap.addPolyline(polylineOptions);
+    }
+
+
     //申请权限
     private void applyForRight() {
-        if (ContextCompat.checkSelfPermission(sport_Activity_OutRoom.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(sport_Activity_OutRoom.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(sport_Activity_OutRoom.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(Sport_Activity_OutRoom.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(Sport_Activity_OutRoom.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(Sport_Activity_OutRoom.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(sport_Activity_OutRoom.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+            ActivityCompat.requestPermissions(Sport_Activity_OutRoom.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.READ_PHONE_STATE
@@ -444,7 +444,7 @@ public class sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
                 if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(sport_Activity_OutRoom.this, "", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Sport_Activity_OutRoom.this, "", Toast.LENGTH_SHORT).show();
                             finish();
                             return;
                         }
