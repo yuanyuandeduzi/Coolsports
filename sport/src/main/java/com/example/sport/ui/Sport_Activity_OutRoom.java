@@ -32,9 +32,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.UiSettings;
@@ -61,14 +65,19 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+//AMap.OnMyLocationChangeListener,
+public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.OnClickListener {
 
-public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.OnMyLocationChangeListener, View.OnClickListener {
-
+    //地图种的类
     protected static MapView mapView;
     private AMap aMap;
     private List<LatLng> sportLatLngs = new ArrayList<>();
     private PolylineOptions polylineOptions;
     private PathSmoothTool pathSmoothTool;  //轨迹平滑处理类
+    private LocationSource.OnLocationChangedListener mListener = null;
+    private AMapLocationClient mLocationClient;
+    private AMapLocationClientOption mLocationOption;
+
 
     //记录
     private PathRecord pathRecord;
@@ -88,6 +97,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
     private FrameLayout frameLayout;
     private TextView animation_tv;
     private MyProgressButton myProgressButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +181,10 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
 
     //开启定位服务
     private void toLocate() {
-        //aMap = mapView.getMap();
+
+        if (aMap == null) {
+            aMap = mapView.getMap();
+        }
         pathRecord = new PathRecord();
 
         createAnimation();
@@ -183,16 +197,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return false;
     }
-
-    //监听位置变化
-    @Override
-    public void onMyLocationChange(Location location) {
-        //绘制移动路线
-        if (isStart) {
-            updateLocation(location);
-        }
-    }
-
 
     //初始化控件
     private void initControl() {
@@ -254,6 +258,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
                 ch_1.setBase(SystemClock.elapsedRealtime());
                 lastUpdate = stringToTime(ch_1.getText().toString());
                 ch_1.start();
+
+                startUpLocation();
             }
         });
     }
@@ -268,19 +274,20 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
                     bt_start.setText("继续");
                     recordTime = SystemClock.elapsedRealtime() - ch_1.getBase();
                     ch_1.stop();
+                    pauseLocation();
                     myProgressButton.setVisibility(View.VISIBLE);
                     isStart = false;
                 } else {
                     bt_start.setText("暂停");
                     ch_1.setBase(SystemClock.elapsedRealtime() - recordTime);
                     ch_1.start();
+                    startUpLocation();
                     myProgressButton.setVisibility(View.INVISIBLE);
                     isStart = true;
                 }
                 break;
         }
     }
-
 
 
     //计算总距离
@@ -329,7 +336,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
-                map.put("uid","1");
+                map.put("uid", "1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
                 postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
@@ -359,12 +366,31 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         alterDialog.show();
     }
 
+
+    private void startUpLocation() {
+
+        startLocation();
+    }
+
+    private void pauseLocation() {
+
+        //停止定位
+        if (null != mLocationClient) {
+            mLocationClient.stopLocation();
+            mLocationClient.unRegisterLocationListener(aMapLocationListener);
+            mLocationClient.onDestroy();
+            mLocationClient = null;
+        }
+    }
+
     //初始化地图
     private void setUpMap() {
-        aMap = mapView.getMap();
+
+        aMap.setLocationSource(locationSource);
+
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
         myLocationStyle.interval(1000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.strokeWidth(0); //精度圈大小
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.sport_point));
@@ -376,7 +402,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
         //位置监听
-        aMap.setOnMyLocationChangeListener(this);
+        //aMap.setOnMyLocationChangeListener(this);
 
         //设置缩放比例
         aMap.setMinZoomLevel(16);
@@ -386,7 +412,70 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         uiSettings.setZoomControlsEnabled(false);
     }
 
+    private LocationSource locationSource = new LocationSource() {
+        @Override
+        public void activate(OnLocationChangedListener onLocationChangedListener) {
+            mListener = onLocationChangedListener;
+            startLocation();
+        }
 
+        @Override
+        public void deactivate() {
+            mListener = null;
+            if (mLocationClient != null) {
+                mLocationClient.stopLocation();
+                mLocationClient.onDestroy();
+            }
+            mLocationClient = null;
+        }
+    };
+
+    /**
+     * 开始定位。
+     */
+    private void startLocation() {
+        if (mLocationClient == null) {
+            try {
+                mLocationClient = new AMapLocationClient(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //设置定位属性
+            mLocationOption = new AMapLocationClientOption();
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+            mLocationOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+            mLocationOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+            mLocationOption.setInterval(1000);//可选，设置定位间隔。默认为2秒
+            mLocationOption.setNeedAddress(false);//可选，设置是否返回逆地理地址信息。默认是true
+            mLocationOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+            mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+            AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+            mLocationOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+            mLocationOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+            mLocationOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+            mLocationOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.ZH);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
+            mLocationClient.setLocationOption(mLocationOption);
+
+            // 设置定位监听
+            mLocationClient.setLocationListener(aMapLocationListener);
+            //开始定位
+            mLocationClient.startLocation();
+        }
+    }
+
+    /**
+     * 定位结果回调
+     *
+     * @param aMapLocation 位置信息类
+     */
+    private final AMapLocationListener aMapLocationListener = aMapLocation -> {
+        if (null == aMapLocation)
+            return;
+        if (aMapLocation.getErrorCode() == 0) {
+            //定位成功
+            updateLocation(aMapLocation);
+        }
+    };
 
 
     //更新路径
@@ -416,6 +505,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         sportLatLngs = new ArrayList<>(pathSmoothTool.pathOptimize(pathRecord.getPathLinePoints()));
 
         if (!sportLatLngs.isEmpty()) {
+            if (mListener != null)
+                mListener.onLocationChanged(location);// 显示系统小蓝点
             polylineOptions.add(sportLatLngs.get(sportLatLngs.size() - 1));
             aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
         }
