@@ -386,6 +386,9 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements AMap.On
         uiSettings.setZoomControlsEnabled(false);
     }
 
+
+
+
     //更新路径
     @SuppressLint("SetTextI18n")
     private void updateLocation(Location location) {
