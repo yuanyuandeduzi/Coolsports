@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tab_1"
+        android:icon="@drawable/p_1"
+        android:title="运动" />
+
+    <item
+        android:id="@+id/tab_2"
+        android:icon="@drawable/p_4"
+        android:title="计划" />
+    <item
+        android:id="@+id/tab_3"
+        android:icon="@drawable/p_2"
+        android:title="社区" />
+    <item
+        android:id="@+id/tab_4"
+        android:icon="@drawable/p_3"
+        android:title="我的" />
+</menu>

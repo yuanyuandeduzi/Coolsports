@@ -47,18 +47,6 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
         myProgress = findViewById(R.id.myProgress);
         myProgress.updateProgress(10.55);
 
-        /*activityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getData() != null && result.getResultCode() == 1) {
-                    PathRecord pathRecord = (PathRecord) result.getData().getParcelableExtra("ahh");
-
-                } else if (result.getData() != null && result.getResultCode() == 2) {
-                    String jj = result.getData().getStringExtra("JJ");
-
-                }
-            }
-        });*/
     }
 
     //
@@ -105,22 +93,18 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.run_outRoom:
-                Intent intent1 = new Intent(Sport_MainActivity.this, Sport_Activity_OutRoom.class);
-                startActivity(intent1);
-                break;
-            case R.id.run_room:
-                Intent intent2 = new Intent(Sport_MainActivity.this, Sport_Activity_Room.class);
-                startActivity(intent2);
-                break;
-            case R.id.bt_target:
-                openDialog();
-                break;
-            case R.id.bt_record:
-                Intent intent = new Intent(Sport_MainActivity.this, Sport_Activity_Record.class);
-                startActivity(intent);
-                break;
+        int id = view.getId();
+        if (id == R.id.run_outRoom) {
+            Intent intent1 = new Intent(Sport_MainActivity.this, Sport_Activity_OutRoom.class);
+            startActivity(intent1);
+        } else if (id == R.id.run_room) {
+            Intent intent2 = new Intent(Sport_MainActivity.this, Sport_Activity_Room.class);
+            startActivity(intent2);
+        } else if (id == R.id.bt_target) {
+            openDialog();
+        } else if (id == R.id.bt_record) {
+            Intent intent = new Intent(Sport_MainActivity.this, Sport_Activity_Record.class);
+            startActivity(intent);
         }
     }
 }
