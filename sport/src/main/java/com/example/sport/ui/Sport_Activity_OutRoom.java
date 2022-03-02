@@ -17,12 +17,21 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -78,7 +87,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
 
-
     //记录
     private PathRecord pathRecord;
     private double distance;
@@ -98,8 +106,9 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private TextView animation_tv;
     private MyProgressButton myProgressButton;
 
+    private LocationService.myBind locationBinder;
 
-
+    @SuppressLint({"ShortAlarm", "InvalidWakeLockTag"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +151,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
                 dbRecord.setRunWhen(getCurrentTime());
                 dbRecord.setDistance(format);
 
-
                 initDialog();
             }
 
@@ -151,6 +159,20 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
             }
         });
+
+        Intent bindIntent = new Intent(this,LocationService.class);
+        bindService(bindIntent, connection, BIND_AUTO_CREATE);
+
+        /*Intent intent = new Intent(getApplicationContext(), LocationService.class);
+        PendingIntent pi = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Service.ALARM_SERVICE);
+        if(alarm != null) {
+            alarm.cancel(pi);
+            // 闹钟在系统睡眠状态下会唤醒系统并执行提示功能
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, 2000, pi);
+            // 确切的时间闹钟alarm.setExact(…);
+            //alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
+        }*/
     }
 
 
@@ -169,6 +191,9 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     @Override
     protected void onDestroy() {
         mapView.onDestroy();
+        if(locationBinder != null) {
+            unbindService(connection);
+        }
         super.onDestroy();
     }
 
@@ -368,19 +393,20 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
 
     private void startUpLocation() {
-
-        startLocation();
+        locationBinder.start(aMapLocationListener);
+        //startLocation();
     }
 
     private void pauseLocation() {
 
-        //停止定位
+        locationBinder.pause(aMapLocationListener);
+        /*//停止定位
         if (null != mLocationClient) {
             mLocationClient.stopLocation();
             mLocationClient.unRegisterLocationListener(aMapLocationListener);
             mLocationClient.onDestroy();
             mLocationClient = null;
-        }
+        }*/
     }
 
     //初始化地图
@@ -391,7 +417,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
-        myLocationStyle.interval(1000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        //myLocationStyle.interval(1000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.strokeWidth(0); //精度圈大小
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.sport_point));
         //去除精度圈
@@ -416,7 +442,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         @Override
         public void activate(OnLocationChangedListener onLocationChangedListener) {
             mListener = onLocationChangedListener;
-            startLocation();
         }
 
         @Override
@@ -432,7 +457,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
     /**
      * 开始定位。
-     */
+     *//*
     private void startLocation() {
         if (mLocationClient == null) {
             try {
@@ -445,7 +470,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
             mLocationOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
             mLocationOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-            mLocationOption.setInterval(1000);//可选，设置定位间隔。默认为2秒
+            mLocationOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
             mLocationOption.setNeedAddress(false);//可选，设置是否返回逆地理地址信息。默认是true
             mLocationOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
             mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
@@ -454,26 +479,28 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             mLocationOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
             mLocationOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
             mLocationOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.ZH);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
+            mLocationOption.setMockEnable(false);
             mLocationClient.setLocationOption(mLocationOption);
-
             // 设置定位监听
             mLocationClient.setLocationListener(aMapLocationListener);
             //开始定位
             mLocationClient.startLocation();
         }
-    }
+    }*/
 
     /**
      * 定位结果回调
      *
      * @param aMapLocation 位置信息类
      */
+    private int i = 0;
     private final AMapLocationListener aMapLocationListener = aMapLocation -> {
         if (null == aMapLocation)
             return;
         if (aMapLocation.getErrorCode() == 0) {
             //定位成功
             updateLocation(aMapLocation);
+            Log.d("TAG","" + i++ );
         }
     };
 
@@ -508,11 +535,23 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             if (mListener != null)
                 mListener.onLocationChanged(location);// 显示系统小蓝点
             polylineOptions.add(sportLatLngs.get(sportLatLngs.size() - 1));
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
+            //aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
         }
         aMap.addPolyline(polylineOptions);
     }
 
+    //服务
+    private ServiceConnection connection = new ServiceConnection() {	//创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            locationBinder = (LocationService.myBind) iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     //申请权限
     private void applyForRight() {
