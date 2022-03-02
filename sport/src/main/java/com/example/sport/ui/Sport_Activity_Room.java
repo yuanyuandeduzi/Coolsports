@@ -170,28 +170,26 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bt_1:
-                if (isStart) {
-                    bt_1.setText("继续");
-                    mButtonEnd.setVisibility(View.VISIBLE);
-                    recordTime = SystemClock.elapsedRealtime() - ch_time.getBase();
-                    //sensorManager.unregisterListener(sport_Activity_Room.this);
-                    recordStep = Integer.parseInt((String) tv_1.getText());
-                    ch_time.stop();
-                    isStart = false;
-                } else {
-                    bt_1.setText("暂停");
-                    sensorManager.registerListener(Sport_Activity_Room.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-                    mButtonEnd.setVisibility(View.INVISIBLE);
-                    ch_time.setBase(SystemClock.elapsedRealtime() - recordTime);
-                    ch_time.start();
-                    isStart = true;
-                }
-                break;
-            case R.id.bt_room_length:
-                openDialog();
-                break;
+        int id = view.getId();
+        if (id == R.id.bt_1) {
+            if (isStart) {
+                bt_1.setText("继续");
+                mButtonEnd.setVisibility(View.VISIBLE);
+                recordTime = SystemClock.elapsedRealtime() - ch_time.getBase();
+                //sensorManager.unregisterListener(sport_Activity_Room.this);
+                recordStep = Integer.parseInt((String) tv_1.getText());
+                ch_time.stop();
+                isStart = false;
+            } else {
+                bt_1.setText("暂停");
+                sensorManager.registerListener(Sport_Activity_Room.this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mButtonEnd.setVisibility(View.INVISIBLE);
+                ch_time.setBase(SystemClock.elapsedRealtime() - recordTime);
+                ch_time.start();
+                isStart = true;
+            }
+        } else if (id == R.id.bt_room_length) {
+            openDialog();
         }
     }
 

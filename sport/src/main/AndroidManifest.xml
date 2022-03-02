@@ -54,15 +54,6 @@
         <activity
             android:name=".ui.Sport_Activity_Room"
             android:exported="false" />
-        <activity
-            android:name=".ui.Sport_MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

@@ -106,21 +106,20 @@ public class Sport_Activity_Record extends AppCompatActivity implements View.OnC
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bt_delete_location:
-                DeleteUtil.getInstance().deleteChecked(this);
-                DeleteUtil.getInstance().setInVisibility();
-                break;
-            case R.id.im_checkAll:
-                if (!DeleteUtil.getInstance().isCheck()) {
-                    im_checkAll.setImageResource(R.drawable.im_check_2);
-                    DeleteUtil.getInstance().setCheckAll(true);
-                    DeleteUtil.getInstance().setCheck(true);
-                } else {
-                    im_checkAll.setImageResource(R.drawable.im_check_1);
-                    DeleteUtil.getInstance().setCheckAll(false);
-                    DeleteUtil.getInstance().setCheck(false);
-                }
+        int id = view.getId();
+        if (id == R.id.bt_delete_location) {
+            DeleteUtil.getInstance().deleteChecked(this);
+            DeleteUtil.getInstance().setInVisibility();
+        } else if (id == R.id.im_checkAll) {
+            if (!DeleteUtil.getInstance().isCheck()) {
+                im_checkAll.setImageResource(R.drawable.im_check_2);
+                DeleteUtil.getInstance().setCheckAll(true);
+                DeleteUtil.getInstance().setCheck(true);
+            } else {
+                im_checkAll.setImageResource(R.drawable.im_check_1);
+                DeleteUtil.getInstance().setCheckAll(false);
+                DeleteUtil.getInstance().setCheck(false);
+            }
         }
     }
 

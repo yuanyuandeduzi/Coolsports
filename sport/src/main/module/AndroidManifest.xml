@@ -49,9 +49,7 @@
         <activity
             android:name=".ui.Sport_Activity_Room"
             android:exported="false" />
-        <activity
-            android:name=".ui.Sport_MainActivity"
-            android:exported="true"/>
+
     </application>
 
 </manifest>

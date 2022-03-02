@@ -170,7 +170,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 // 每十五秒唤醒一次
         long second = 15 * 1000;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
-
     }
 
 
@@ -291,24 +290,22 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bt_1:
-                if (isStart) {
-                    bt_start.setText("继续");
-                    recordTime = SystemClock.elapsedRealtime() - ch_1.getBase();
-                    ch_1.stop();
-                    pauseLocation();
-                    myProgressButton.setVisibility(View.VISIBLE);
-                    isStart = false;
-                } else {
-                    bt_start.setText("暂停");
-                    ch_1.setBase(SystemClock.elapsedRealtime() - recordTime);
-                    ch_1.start();
-                    startUpLocation();
-                    myProgressButton.setVisibility(View.INVISIBLE);
-                    isStart = true;
-                }
-                break;
+        if (view.getId() == R.id.bt_1) {
+            if (isStart) {
+                bt_start.setText("继续");
+                recordTime = SystemClock.elapsedRealtime() - ch_1.getBase();
+                ch_1.stop();
+                pauseLocation();
+                myProgressButton.setVisibility(View.VISIBLE);
+                isStart = false;
+            } else {
+                bt_start.setText("暂停");
+                ch_1.setBase(SystemClock.elapsedRealtime() - recordTime);
+                ch_1.start();
+                startUpLocation();
+                myProgressButton.setVisibility(View.INVISIBLE);
+                isStart = true;
+            }
         }
     }
 
