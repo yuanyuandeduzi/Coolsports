@@ -27,7 +27,6 @@ import java.util.List;
 
 public class Sport_MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private ActivityResultLauncher<Intent> activityLauncher;
     private Button mButton_room;
     private Button mButton_out;
     private Button mButton_record;
@@ -48,7 +47,7 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
         myProgress = findViewById(R.id.myProgress);
         myProgress.updateProgress(10.55);
 
-        activityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        /*activityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getData() != null && result.getResultCode() == 1) {
@@ -59,7 +58,7 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
 
                 }
             }
-        });
+        });*/
     }
 
     //
@@ -101,7 +100,6 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
         mButton_record.setOnClickListener(this);
         mButton_target = findViewById(R.id.bt_target);
         mButton_target.setOnClickListener(this);
-
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -110,20 +108,19 @@ public class Sport_MainActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()) {
             case R.id.run_outRoom:
                 Intent intent1 = new Intent(Sport_MainActivity.this, Sport_Activity_OutRoom.class);
-                activityLauncher.launch(intent1);
+                startActivity(intent1);
                 break;
             case R.id.run_room:
                 Intent intent2 = new Intent(Sport_MainActivity.this, Sport_Activity_Room.class);
-                activityLauncher.launch(intent2);
+                startActivity(intent2);
                 break;
             case R.id.bt_target:
                 openDialog();
                 break;
             case R.id.bt_record:
                 Intent intent = new Intent(Sport_MainActivity.this, Sport_Activity_Record.class);
-                activityLauncher.launch(intent);
+                startActivity(intent);
                 break;
-
         }
     }
 }

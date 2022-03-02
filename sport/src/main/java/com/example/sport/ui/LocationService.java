@@ -70,7 +70,7 @@ public class LocationService extends Service {
             mLocationOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
             mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
             AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-            mLocationOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+            mLocationOption.setSensorEnable(true);//可选，设置是否使用传感器。默认是false
             mLocationOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
             mLocationOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
             mLocationOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.ZH);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）

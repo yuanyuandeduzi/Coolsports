@@ -163,16 +163,14 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         Intent bindIntent = new Intent(this,LocationService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-        /*Intent intent = new Intent(getApplicationContext(), LocationService.class);
-        PendingIntent pi = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-        AlarmManager alarm = (AlarmManager)getSystemService(Service.ALARM_SERVICE);
-        if(alarm != null) {
-            alarm.cancel(pi);
-            // 闹钟在系统睡眠状态下会唤醒系统并执行提示功能
-            alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, 2000, pi);
-            // 确切的时间闹钟alarm.setExact(…);
-            //alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
-        }*/
+        //创建Alarm并启动
+        Intent intent = new Intent("LOCATION_CLOCK");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+// 每十五秒唤醒一次
+        long second = 15 * 1000;
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
+
     }
 
 
@@ -338,7 +336,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         polylineOptions.useGradient(true);
 
         pathSmoothTool = new PathSmoothTool();
-        pathSmoothTool.setIntensity(4);
+        pathSmoothTool.setIntensity(2);
     }
 
     //退出的dialog
@@ -400,13 +398,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private void pauseLocation() {
 
         locationBinder.pause(aMapLocationListener);
-        /*//停止定位
-        if (null != mLocationClient) {
-            mLocationClient.stopLocation();
-            mLocationClient.unRegisterLocationListener(aMapLocationListener);
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-        }*/
     }
 
     //初始化地图
@@ -535,7 +526,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             if (mListener != null)
                 mListener.onLocationChanged(location);// 显示系统小蓝点
             polylineOptions.add(sportLatLngs.get(sportLatLngs.size() - 1));
-            //aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
         }
         aMap.addPolyline(polylineOptions);
     }
