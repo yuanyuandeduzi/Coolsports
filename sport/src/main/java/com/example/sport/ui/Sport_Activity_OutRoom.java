@@ -28,7 +28,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
@@ -41,6 +43,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
@@ -170,6 +173,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 // 每十五秒唤醒一次
         long second = 15 * 1000;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
+
     }
 
 
@@ -181,7 +185,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
     @Override
     protected void onPause() {
-        mapView.onPause();
+        //mapView.onPause();
         super.onPause();
     }
 
@@ -235,53 +239,56 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
     //起始动画
     private void createAnimation() {
-        animation_tv.setText("3");
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(animation_tv, "scaleX", 70f, 20f);
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(animation_tv, "scaleY", 70f, 20f);
-        objectAnimator1.setDuration(1000);
-        objectAnimator2.setDuration(1000);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(objectAnimator1).with(objectAnimator2);
-        animatorSet.start();
-        AnimatorSet clone1 = animatorSet.clone();
-        AnimatorSet clone2 = animatorSet.clone();
-        AnimatorSet clone3 = animatorSet.clone();
-        animatorSet.addListener(new AnimatorListenerAdapter() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                animation_tv.setText("2");
-                clone1.start();
-            }
-        });
-        clone1.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                animation_tv.setText("1");
-                clone2.start();
-            }
-        });
-        clone2.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                animation_tv.setText("Go");
-                clone3.start();
-            }
-        });
-        clone3.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                frameLayout.setVisibility(View.GONE);
-                isStart = true;
-                bt_start.setVisibility(View.VISIBLE);
-                ch_1.setBase(SystemClock.elapsedRealtime());
-                lastUpdate = stringToTime(ch_1.getText().toString());
-                ch_1.start();
-
-                startUpLocation();
+            public void run() {
+                animation_tv.setText("3");
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(animation_tv, "scaleX", 70f, 20f);
+                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(animation_tv, "scaleY", 70f, 20f);
+                objectAnimator1.setDuration(1000);
+                objectAnimator2.setDuration(1000);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.play(objectAnimator1).with(objectAnimator2);
+                animatorSet.start();
+                AnimatorSet clone1 = animatorSet.clone();
+                AnimatorSet clone2 = animatorSet.clone();
+                AnimatorSet clone3 = animatorSet.clone();
+                animatorSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        animation_tv.setText("2");
+                        clone1.start();
+                    }
+                });
+                clone1.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        animation_tv.setText("1");
+                        clone2.start();
+                    }
+                });
+                clone2.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        animation_tv.setText("Go");
+                        clone3.start();
+                    }
+                });
+                clone3.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        frameLayout.setVisibility(View.GONE);
+                        isStart = true;
+                        bt_start.setVisibility(View.VISIBLE);
+                        ch_1.setBase(SystemClock.elapsedRealtime());
+                        lastUpdate = stringToTime(ch_1.getText().toString());
+                        ch_1.start();
+                    }
+                });
             }
         });
     }
@@ -389,7 +396,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
     private void startUpLocation() {
         locationBinder.start(aMapLocationListener);
-        //startLocation();
     }
 
     private void pauseLocation() {
@@ -402,10 +408,10 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
         aMap.setLocationSource(locationSource);
 
+
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
-        //myLocationStyle.interval(1000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.strokeWidth(0); //精度圈大小
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.sport_point));
         //去除精度圈
@@ -442,39 +448,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             mLocationClient = null;
         }
     };
-
-    /**
-     * 开始定位。
-     *//*
-    private void startLocation() {
-        if (mLocationClient == null) {
-            try {
-                mLocationClient = new AMapLocationClient(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //设置定位属性
-            mLocationOption = new AMapLocationClientOption();
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-            mLocationOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-            mLocationOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-            mLocationOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
-            mLocationOption.setNeedAddress(false);//可选，设置是否返回逆地理地址信息。默认是true
-            mLocationOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
-            mLocationOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-            AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-            mLocationOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
-            mLocationOption.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
-            mLocationOption.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
-            mLocationOption.setGeoLanguage(AMapLocationClientOption.GeoLanguage.ZH);//可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
-            mLocationOption.setMockEnable(false);
-            mLocationClient.setLocationOption(mLocationOption);
-            // 设置定位监听
-            mLocationClient.setLocationListener(aMapLocationListener);
-            //开始定位
-            mLocationClient.startLocation();
-        }
-    }*/
 
     /**
      * 定位结果回调
@@ -528,11 +501,13 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         aMap.addPolyline(polylineOptions);
     }
 
+
     //服务
     private ServiceConnection connection = new ServiceConnection() {	//创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             locationBinder = (LocationService.myBind) iBinder;
+            locationBinder.start(aMapLocationListener);
         }
 
         @Override
