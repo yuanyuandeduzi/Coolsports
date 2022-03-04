@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    字体大小-->
+    <dimen name="textSize_0">10sp</dimen>
+    <dimen name="textSize_1">11sp</dimen>
+    <dimen name="textSize_2">12sp</dimen>
+    <dimen name="textSize_3">13sp</dimen>
+    <dimen name="textSize_4">14sp</dimen>
+    <dimen name="textSize_5">15sp</dimen>
+    <dimen name="textSize_6">16sp</dimen>
+    <dimen name="textSize_7">17sp</dimen>
+    <dimen name="textSize_8">18sp</dimen>
+    <dimen name="text_Size_9">19sp</dimen>
+    <dimen name="text_Size_10">20sp</dimen>
+    <dimen name="text_Size_11">21sp</dimen>
+    <dimen name="text_Size_12">22sp</dimen>
+    <dimen name="text_Size_13">23sp</dimen>
+    <dimen name="text_Size_14">24sp</dimen>
+    <dimen name="text_Size_15">25sp</dimen>
+</resources>
