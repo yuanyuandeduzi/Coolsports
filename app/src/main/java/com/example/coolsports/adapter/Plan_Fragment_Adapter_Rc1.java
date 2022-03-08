@@ -1,8 +1,6 @@
 package com.example.coolsports.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,12 @@ import com.example.coolsports.util.Plan_Fragment_RcUtils;
 
 import java.util.List;
 
-public class Plan_Fragment_Adapter_Rc extends RecyclerView.Adapter<Plan_Fragment_Adapter_Rc.ViewHolder> {
+public class Plan_Fragment_Adapter_Rc1 extends RecyclerView.Adapter<Plan_Fragment_Adapter_Rc1.ViewHolder> {
 
     private List<Data> mList;
     private Plan_Fragment_RcUtils planUtil;
 
-    public Plan_Fragment_Adapter_Rc(List<Data> mList) {
+    public Plan_Fragment_Adapter_Rc1(List<Data> mList) {
         this.mList = mList;
     }
 
@@ -61,7 +59,7 @@ public class Plan_Fragment_Adapter_Rc extends RecyclerView.Adapter<Plan_Fragment
                 for (Data data : mList) {
                     data.setSelected(false);
                 }
-                planUtil.setIsSelected(holder, mList.get(position));
+                planUtil.setIsSelected(holder, mList.get(position), position);
                 mList.get(position).setSelected(true);
             }
         });

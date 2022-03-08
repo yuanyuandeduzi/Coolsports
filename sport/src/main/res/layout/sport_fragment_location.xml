@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:text="无本地的记录"
         android:textSize="@dimen/textSize_8"
+        android:visibility="invisible"
         android:textColor="@color/text_color_2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

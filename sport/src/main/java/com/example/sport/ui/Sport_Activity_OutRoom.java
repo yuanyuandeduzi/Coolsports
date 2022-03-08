@@ -454,14 +454,12 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
      *
      * @param aMapLocation 位置信息类
      */
-    private int i = 0;
     private final AMapLocationListener aMapLocationListener = aMapLocation -> {
         if (null == aMapLocation)
             return;
         if (aMapLocation.getErrorCode() == 0) {
             //定位成功
             updateLocation(aMapLocation);
-            Log.d("TAG","" + i++ );
         }
     };
 
