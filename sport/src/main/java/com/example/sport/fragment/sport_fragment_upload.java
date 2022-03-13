@@ -92,28 +92,5 @@ public class sport_fragment_upload extends Fragment {
                 Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
             }
         });
-
-       /* new UploadUtil().getPostService().getCall2("run/queryRunRecordsByUid", map).observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<BaseResponse<Record_upLoad[]>>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void accept(BaseResponse<Record_upLoad[]> baseResponse) throws Exception {
-                        if (baseResponse == null) {
-                            Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if (baseResponse.isSuccess()) {
-                            Record_upLoad[] data = baseResponse.getData();
-                            Log.d("TAG", "onResponse: " + data[0].getRunWhen());
-                            Collections.addAll(mList, data);
-                            Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                        }
-                        rc_Adapter.notifyDataSetChanged();
-                    }
-                });*/
     }
 }
