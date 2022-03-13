@@ -45,8 +45,8 @@ import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
-import com.example.sport.network.ApiService;
-import com.example.sport.network.UploadUtil;
+import com.example.baselibs.net.network.ApiService;
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.view.MyProgressButton;
 import com.example.sport.view.PickerView;
@@ -251,7 +251,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
                 map.put("uid", "1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
-                postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
+                postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                         if (response.body() == null) {

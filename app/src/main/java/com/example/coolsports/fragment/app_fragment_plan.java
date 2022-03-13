@@ -3,6 +3,7 @@ package com.example.coolsports.fragment;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,19 +19,29 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.coolsports.R;
 import com.example.coolsports.adapter.Plan_Fragment_Adapter_Rc1;
 import com.example.coolsports.bean.Data;
 import com.example.coolsports.myView.MyPlanProgressBar;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
-import com.example.sport.db.DbRecord;
-import com.example.sport.network.Record_upLoad;
+import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.sport.util.TimeUtil;
 import com.example.sport.view.PickerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class app_fragment_plan extends Fragment implements View.OnClickListener {
 
@@ -59,9 +70,14 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     //RecyclerView2
     private RecyclerView mRecyclerView2;
     private List<Record_upLoad> mList2 = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager2;
+    private Upload_Adapter_Rc upload_adapter_rc2;
 
     //记录
     private int target = 100;
+    private Data data;
+    private Data dataNow;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +88,8 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mList1 = getList();
+        uploadData(data);
+        dataNow = data;
         initControl(view);
 
         Plan_Fragment_RcUtils.getsInstance().setListener(new Plan_Fragment_RcUtils.ChangeListener() {
@@ -86,15 +104,111 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
                     mButton_1.setVisibility(View.VISIBLE);
                 }
                 mTv_1.setText(data.getDayAndMonth());
-                if(position < 30) {
+                if (position < 30) {
                     mButton_2.setVisibility(View.INVISIBLE);
-                }else {
+                } else {
                     mButton_2.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void updateMainData(Data data) {
+                uploadData(data);
+                dataNow = data;
             }
         });
 
     }
+
+    //获取计划当天的记录
+    private void uploadData(Data data) {
+        UploadUtil util = new UploadUtil();
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", "1");
+        map.put("day", data.getDayTime());
+        util.getPostService().plan_postCallForRecord("run/getPlanRunRecord", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
+                BaseResponse<Record_upLoad[]> body = response.body();
+                assert body != null;
+                if (body.isSuccess()) {
+                    Record_upLoad[] data1 = body.getData();
+                    mList2.clear();
+                    Collections.addAll(mList2, data1);
+                    if (mList2.size() != 0) {
+                        mTv_4.setVisibility(View.GONE);
+                    } else {
+                        mTv_4.setVisibility(View.VISIBLE);
+                    }
+                    upload_adapter_rc2.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<Record_upLoad[]>> call, Throwable t) {
+            }
+        });
+
+        util.getPostService().plan_postCallForTarget("run/getPlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                String target = null;
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    target = response.body().getData();
+                }
+                mTv_3.setText("/" + target + "分钟");
+                assert target != null;
+                myPlanProgressBar.setProgress(Float.parseFloat(target));
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+
+        util.getPostService().plan_postCallForSumTime("run/getPlanDaySumTime", map).enqueue(new Callback<BaseResponse<String>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                assert response.body() != null;
+                if (response.body().isSuccess()) {
+                    float sum = Float.parseFloat(response.body().getData());
+                    myPlanProgressBar.setCurrentProgress(sum);
+                    mTv_2.setText((int)sum + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    //设置今日目标
+    private void updateTarget(int target) {
+        UploadUtil util = new UploadUtil();
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", "1");
+        map.put("day", dataNow.getDayTime());
+        map.put("target", target + "");
+        util.getPostService().plan_postCallForUpdateTarget("run/updatePlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     private void initControl(View view) {
         mTv_1 = view.findViewById(R.id.tv_1);
@@ -136,24 +250,15 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         mTv_4 = view.findViewById(R.id.tv_4);
         myPlanProgressBar = view.findViewById(R.id.myProgressBar);
         mRecyclerView2 = view.findViewById(R.id.plan_fragment_rc2);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView2.setLayoutManager(linearLayoutManager);
-        //mList2.add(new Record_upLoad());
-        if(mList2.size() > 0) {
-            mTv_4.setVisibility(View.INVISIBLE);
-        }else {
-            mTv_4.setVisibility(View.VISIBLE);
-        }
-        mRecyclerView2.setAdapter(new Upload_Adapter_Rc(mList2));
+        linearLayoutManager2 = new LinearLayoutManager(getContext());
+        linearLayoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView2.setLayoutManager(linearLayoutManager2);
+
+        upload_adapter_rc2 = new Upload_Adapter_Rc(mList2);
+        mRecyclerView2.setAdapter(upload_adapter_rc2);
 
         mButton_2 = view.findViewById(R.id.bt_plan_target);
-        mButton_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialog();
-            }
-        });
+        mButton_2.setOnClickListener(this);
 
     }
 
@@ -170,6 +275,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             mTv_1.setText("今日");
             mButton_1.setVisibility(View.INVISIBLE);
             mButton_2.setVisibility(View.VISIBLE);
+            dataNow = data;
+            uploadData(data);
+        } else if (view.getId() == R.id.bt_plan_target) {
+            openDialog();
         }
     }
 
@@ -210,7 +319,9 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                mTv_3.setText("/" + target +"分钟");
+                mTv_3.setText("/" + target + "分钟");
+                updateTarget(target);
+                myPlanProgressBar.setProgress(target);
                 dialog.cancel();
             }
         });
@@ -234,9 +345,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             Data data = new Data();
             data.setDayOfMonth(calendar.get(Calendar.DAY_OF_MONTH) + "");
             data.setDay(getWeek(calendar.get(Calendar.DAY_OF_WEEK)));
+            data.setDayTime(TimeUtil.getTimeByDate(calendar.getTime()));
             if (i == 0) {
                 data.setDayAndMonth("今日");
                 data.setDay("今日");
+                this.data = data;
                 data.setSelected(true);
             } else {
                 data.setDayAndMonth(calendar.get(Calendar.MONTH) + 1 + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日");

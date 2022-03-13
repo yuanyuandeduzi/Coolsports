@@ -30,7 +30,7 @@ public class GradientProgressBar extends View {
     //文字颜色
     private int mTextColor;
     //文本
-    private String mText1;
+    private String mText1 = "";
     private String mText2 = "目标0.00km";
     //文本大小
     private float mTextSize;

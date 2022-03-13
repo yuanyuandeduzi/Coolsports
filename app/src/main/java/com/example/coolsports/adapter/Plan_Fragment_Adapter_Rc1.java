@@ -61,6 +61,7 @@ public class Plan_Fragment_Adapter_Rc1 extends RecyclerView.Adapter<Plan_Fragmen
                 }
                 planUtil.setIsSelected(holder, mList.get(position), position);
                 mList.get(position).setSelected(true);
+                planUtil.updateDay(mList.get(position));
             }
         });
     }

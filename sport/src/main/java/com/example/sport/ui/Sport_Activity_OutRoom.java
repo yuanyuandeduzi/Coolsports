@@ -19,7 +19,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,9 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.PowerManager;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -43,7 +40,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
@@ -62,8 +58,8 @@ import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
-import com.example.sport.network.ApiService;
-import com.example.sport.network.UploadUtil;
+import com.example.baselibs.net.network.ApiService;
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.util.PathSmoothTool;
 import com.example.sport.view.MyProgressButton;
@@ -366,7 +362,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
                 map.put("uid", "1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
-                postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
+                postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                         if (response.body() == null) {

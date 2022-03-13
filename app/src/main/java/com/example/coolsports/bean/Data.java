@@ -12,9 +12,22 @@ public class Data {
     }
 
     private boolean isSelected = false;
+
     private String dayOfMonth = "";
+    //周几
     private String day = "";
+    //月份日期
     private String dayAndMonth = "";
+    //yyyy-MM-dd格式日期
+    private String dayTime = "";
+
+    public String getDayTime() {
+        return dayTime;
+    }
+
+    public void setDayTime(String dayTime) {
+        this.dayTime = dayTime;
+    }
 
     public String getDayAndMonth() {
         return dayAndMonth;

@@ -59,6 +59,11 @@ public class Plan_Fragment_RcUtils {
     public interface ChangeListener {
         void isInVisibility();
         void isNotToday(Data data, int position);
+        void updateMainData(Data data);
+    }
+
+    public void updateDay(Data data) {
+        listener.updateMainData(data);
     }
 
     public void setListener(ChangeListener listener) {

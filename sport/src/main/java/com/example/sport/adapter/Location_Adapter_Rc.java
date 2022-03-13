@@ -2,7 +2,6 @@ package com.example.sport.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,8 @@ import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
 import com.example.sport.db.DbRecord;
-import com.example.sport.network.ApiService;
-import com.example.sport.network.UploadUtil;
+import com.example.baselibs.net.network.ApiService;
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.util.DeleteUtil;
 
 import java.util.HashMap;
@@ -139,7 +138,7 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
                 map.put("uid","1");
                 UploadUtil util = new UploadUtil();
                 ApiService postService = util.getPostService();
-                postService.postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
+                postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                         if (response.body() == null) {
