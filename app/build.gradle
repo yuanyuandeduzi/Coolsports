@@ -30,10 +30,9 @@ android {
 dependencies {
 
     implementation project(":Baselibs")
-
+    implementation 'com.google.android.material:material:1.5.0'
     if(isModule.toBoolean()) {
         implementation project(":login")
-        implementation project(":sport")
-
     }
+    implementation project(":sport")
 }

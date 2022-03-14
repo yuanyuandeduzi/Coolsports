@@ -1,18 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".sport_MainActivity">
+    android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/location_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sport!!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="30dp"
+        android:text="自由跑"
+        android:textColor="@color/text_color_2"
+        android:textSize="25sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="#AEABAB"
+        app:layout_constraintTop_toBottomOf="@+id/location_1" />
+
+
+    <com.example.sport.view.GradientProgressBar
+        android:id="@+id/myProgress"
+        android:layout_width="330dp"
+        android:layout_height="330dp"
+        android:layout_marginTop="40dp"
+        app:circleColor="#BAF40F0F"
+        app:circleCover="#ECE4E4"
+        app:kdLength="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_1"
+        app:radius="150dp"
+        app:strokeWidth="2dp"
+        app:text="100.00km"
+        app:textColor="#1C1C1C"
+        app:textSize="50sp" />
+
+    <Button
+        android:id="@+id/bt_target"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_record_bg1"
+        android:text="设置目标"
+        android:layout_marginTop="60dp"
+        android:textColor="@color/text_color_4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myProgress" />
+
+    <Button
+        android:id="@+id/bt_record"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_record_bg1"
+        android:text="运动记录"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_color_4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_target" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="30dp"
+        android:background="#AEABAB"
+        app:layout_constraintTop_toBottomOf="@+id/myProgress" />
+
+    <Button
+        android:id="@+id/run_outRoom"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:background="@drawable/outroom_bt"
+        android:text="户外跑"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/run_room"
+        app:layout_constraintTop_toBottomOf="@+id/bt_record" />
+
+    <Button
+        android:id="@+id/run_room"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:background="@drawable/room_bt"
+        android:text="室内跑"
+        android:textColor="@color/text_color_2"
+        android:textSize="30dp"
+        app:layout_constraintLeft_toRightOf="@id/run_outRoom"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/run_outRoom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

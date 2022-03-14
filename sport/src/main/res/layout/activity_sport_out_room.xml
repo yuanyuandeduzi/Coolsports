@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.Sport_Activity_OutRoom">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_sportmap" />
+
+
+    <Chronometer
+        android:id="@+id/ch_sport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:ellipsize="end"
+        android:format="00:00:00"
+        android:gravity="center"
+        android:textColor="@color/text_color_1"
+        android:textSize="65sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/layout"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_background_run"
+        android:layout_marginBottom="90dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/tv_sport_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_sport_out"
+            android:text="0.00"
+            android:textColor="@color/text_color_1"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_3"
+            android:layout_marginStart="5dp"
+            android:text="公里"
+            android:textColor="@color/text_color_2"
+            android:textSize="@dimen/textSize_4"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_sport_out"
+            app:layout_constraintLeft_toRightOf="@id/tv_sport_out" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="运动里程"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize_4"
+            android:layout_marginTop="15dp"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_sport_out"
+            app:layout_constraintRight_toRightOf="@id/tv_3"
+            app:layout_constraintTop_toBottomOf="@id/tv_sport_out"/>
+
+        <TextView
+            android:id="@+id/tv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0′00″"
+            android:textColor="@color/text_color_1"
+            android:textSize="26sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_sport_out"
+            app:layout_constraintLeft_toRightOf="@id/tv_sport_out"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="平均配速"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize_4"
+            android:layout_marginTop="15dp"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_2"
+            app:layout_constraintRight_toRightOf="@id/tv_2"
+            app:layout_constraintTop_toBottomOf="@id/tv_2"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/bt_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/circle_sport_bg"
+        android:text="暂停"
+        android:textColor="@color/text_color_3"
+        android:textSize="30dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/layout"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
+        />
+
+    <com.example.sport.view.MyProgressButton
+        android:id="@+id/myProgress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_toEndOf="@+id/bt_1"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:circleColor="#FF405C"
+        app:radius="34dp"
+        app:ringCColor="#FA0C45"
+        app:ringColor="@color/white"
+        app:strokeWidth="3dp"
+        app:text="结束"
+        app:textColor="@color/white"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@+id/layout"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
+        app:layout_constraintLeft_toRightOf="@id/bt_1"
+        />
+
+    <FrameLayout
+        android:id="@+id/animation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green_start">
+
+        <TextView
+            android:id="@+id/tv_animation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
