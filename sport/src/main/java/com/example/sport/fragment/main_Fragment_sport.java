@@ -133,11 +133,10 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
         UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
         map.put("uid", "1");
-        map.put("target",  ""+ d);
+        map.put("target", "" + d);
         util.getPostService().sport_postCallForUpdateTarget("run/addSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                 Log.d("TAG", "onResponse: ");
             }
 
             @Override
@@ -155,10 +154,8 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
         util.getPostService().sport_postCallForgetTarget("run/getSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                assert response.body() != null;
-                if (response.body().isSuccess()) {
+                if (response.body() != null && response.body().isSuccess()) {
                     String str = response.body().getData();
-                    Log.d("TAG", "onResponse: " + str);
                     myProgress.setSumProgress(Double.parseDouble(str));
                 }
             }
@@ -172,9 +169,8 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
         util.getPostService().sport_postCallForgetSumDistance("run/getRunSumDistance", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                if (response.body().isSuccess()) {
+                if (response.body() != null && response.body().isSuccess()) {
                     String str = response.body().getData();
-                    Log.d("TAG", "onResponse: " + str);
                     myProgress.updateProgress(Double.parseDouble(str));
                 }
             }

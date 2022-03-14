@@ -131,8 +131,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             @Override
             public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
                 BaseResponse<Record_upLoad[]> body = response.body();
-                assert body != null;
-                if (body.isSuccess()) {
+                if (body != null && body.isSuccess()) {
                     Record_upLoad[] data1 = body.getData();
                     mList2.clear();
                     Collections.addAll(mList2, data1);
@@ -154,13 +153,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                String target = null;
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
+                String target = "0";
+                if (response.body() != null && response.isSuccessful()) {
                     target = response.body().getData();
                 }
                 mTv_3.setText("/" + target + "分钟");
-                assert target != null;
                 myPlanProgressBar.setProgress(Float.parseFloat(target));
             }
 
@@ -173,11 +170,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         util.getPostService().plan_postCallForSumTime("run/getPlanDaySumTime", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
-                assert response.body() != null;
-                if (response.body().isSuccess()) {
+                if (response.body() != null && response.body().isSuccess()) {
                     float sum = Float.parseFloat(response.body().getData());
                     myPlanProgressBar.setCurrentProgress(sum);
-                    mTv_2.setText((int)sum + "");
+                    mTv_2.setText((int) sum + "");
                 }
             }
 
