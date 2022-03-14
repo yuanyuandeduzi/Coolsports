@@ -1,4 +1,4 @@
-package com.example.sport.network;
+package com.example.baselibs.net.network.bean;
 
 public class Record_upLoad {
 

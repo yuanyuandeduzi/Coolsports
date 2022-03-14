@@ -2,7 +2,6 @@ package com.example.sport.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.adapter.Upload_Adapter_Rc;
-import com.example.sport.db.DbRecord;
-import com.example.sport.network.Record_upLoad;
-import com.example.sport.network.UploadUtil;
-
-import org.reactivestreams.Subscriber;
+import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.baselibs.net.network.UploadUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,7 +65,7 @@ public class sport_fragment_upload extends Fragment {
     private void upload() {
         Map<String, String> map = new HashMap<>();
         map.put("uid", "1");
-        new UploadUtil().getPostService().getCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
+        new UploadUtil().getPostService().sport_postCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
@@ -100,28 +92,5 @@ public class sport_fragment_upload extends Fragment {
                 Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
             }
         });
-
-       /* new UploadUtil().getPostService().getCall2("run/queryRunRecordsByUid", map).observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<BaseResponse<Record_upLoad[]>>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void accept(BaseResponse<Record_upLoad[]> baseResponse) throws Exception {
-                        if (baseResponse == null) {
-                            Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if (baseResponse.isSuccess()) {
-                            Record_upLoad[] data = baseResponse.getData();
-                            Log.d("TAG", "onResponse: " + data[0].getRunWhen());
-                            Collections.addAll(mList, data);
-                            Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                        }
-                        rc_Adapter.notifyDataSetChanged();
-                    }
-                });*/
     }
 }

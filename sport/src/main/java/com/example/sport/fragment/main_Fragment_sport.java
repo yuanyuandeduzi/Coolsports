@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.R;
 import com.example.sport.ui.Sport_Activity_OutRoom;
 import com.example.sport.ui.Sport_Activity_Record;
@@ -24,9 +27,15 @@ import com.example.sport.view.GradientProgressBar;
 import com.example.sport.view.PickerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class main_Fragment_sport extends Fragment implements View.OnClickListener{
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class main_Fragment_sport extends Fragment implements View.OnClickListener {
 
     private Button mButton_room;
     private Button mButton_out;
@@ -47,8 +56,10 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
 
         initControl(view);
         myProgress = view.findViewById(R.id.myProgress);
-        myProgress.updateProgress(10.55);
+        getSportTargetAndDistance();
     }
+
+    private double d;
 
     //
     private void openDialog() {
@@ -56,7 +67,7 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
         View inflate = LayoutInflater.from(getContext()).inflate(R.layout.dialog_item, null);
         PickerView pickerView = inflate.findViewById(R.id.pickerView);
         List<String> data = new ArrayList<>();
-        for(int i = 1; i < 10000; i = i * 2) {
+        for (int i = 1; i < 10000; i = i * 2) {
             data.add(i + "km");
         }
         pickerView.setData(data);
@@ -64,8 +75,16 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
             @Override
             public void onSelect(String text) {
                 String s = text.substring(0, text.length() - 2);
-                double d = Double.parseDouble(s);
+                d = Double.parseDouble(s);
+            }
+        });
+        Button button = inflate.findViewById(R.id.button_1);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 myProgress.setSumProgress(d);
+                updateTarget(d);
+                dialog.cancel();
             }
         });
         dialog.setContentView(inflate);
@@ -109,4 +128,58 @@ public class main_Fragment_sport extends Fragment implements View.OnClickListene
         }
     }
 
+    //更新总目标
+    private void updateTarget(Double d) {
+        UploadUtil util = new UploadUtil();
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", "1");
+        map.put("target", "" + d);
+        util.getPostService().sport_postCallForUpdateTarget("run/addSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    //获取总目标
+    private void getSportTargetAndDistance() {
+        UploadUtil util = new UploadUtil();
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", "1");
+        util.getPostService().sport_postCallForgetTarget("run/getSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                if (response.body() != null && response.body().isSuccess()) {
+                    String str = response.body().getData();
+                    myProgress.setSumProgress(Double.parseDouble(str));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+
+        util.getPostService().sport_postCallForgetSumDistance("run/getRunSumDistance", map).enqueue(new Callback<BaseResponse<String>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
+                if (response.body() != null && response.body().isSuccess()) {
+                    String str = response.body().getData();
+                    myProgress.updateProgress(Double.parseDouble(str));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+
+            }
+        });
+
+    }
 }

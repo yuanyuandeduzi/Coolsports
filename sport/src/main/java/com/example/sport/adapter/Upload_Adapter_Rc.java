@@ -3,14 +3,13 @@ package com.example.sport.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sport.R;
-import com.example.sport.network.Record_upLoad;
+import com.example.baselibs.net.network.bean.Record_upLoad;
 
 import java.util.List;
 
