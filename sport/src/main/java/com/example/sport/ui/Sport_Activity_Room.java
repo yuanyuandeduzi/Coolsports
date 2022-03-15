@@ -119,7 +119,6 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
             public void isFinish() {
                 pathRecord.setDuration(stringToTime(ch_time.getText().toString()));
                 pathRecord.setSteps(Integer.parseInt(tv_1.getText().toString()));
-                Log.d("TAG", "isFinish: " + pathRecord.getSteps());
                 pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 100000f);
 
                 dbRecord = new DbRecord();

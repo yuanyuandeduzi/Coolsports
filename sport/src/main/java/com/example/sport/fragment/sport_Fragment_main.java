@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class main_Fragment_sport extends Fragment implements View.OnClickListener {
+public class sport_Fragment_main extends Fragment implements View.OnClickListener {
 
     private Button mButton_room;
     private Button mButton_out;

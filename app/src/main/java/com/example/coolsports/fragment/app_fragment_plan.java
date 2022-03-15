@@ -156,9 +156,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
                 String target = "0";
                 if (response.body() != null && response.isSuccessful()) {
                     target = response.body().getData();
+                    if(target != null) {
+                        mTv_3.setText("/" + target + "分钟");
+                        myPlanProgressBar.setProgress(Float.parseFloat(target));
+                    }
                 }
-                mTv_3.setText("/" + target + "分钟");
-                myPlanProgressBar.setProgress(Float.parseFloat(target));
             }
 
             @Override
@@ -168,6 +170,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         });
 
         util.getPostService().plan_postCallForSumTime("run/getPlanDaySumTime", map).enqueue(new Callback<BaseResponse<String>>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 if (response.body() != null && response.body().isSuccess()) {

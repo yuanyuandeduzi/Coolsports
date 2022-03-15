@@ -14,53 +14,54 @@ import retrofit2.http.Url;
 
 public interface ApiService {
 
+    String str = "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDcyNDUwNTEsImV4cCI6MTY0ODQ1NDY1MSwidXNlcklkIjoiMSJ9.75LG1vpm-hJrCqlhj2vhPP30omxAxxwvlu-7NnslB1s";
+
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> sport_postCall(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<Record_upLoad[]>> sport_postCall1(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> sport_postCallForUpdateTarget(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> sport_postCallForgetTarget(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> sport_postCallForgetSumDistance(@Url String url, @FieldMap Map<String, String> map);
 
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<Record_upLoad[]>> plan_postCallForRecord(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> plan_postCallForTarget(@Url String url, @FieldMap Map<String, String> map);
 
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> plan_postCallForUpdateTarget(@Url String url, @FieldMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST
-    @Headers("token: eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYxMjE2OTAsImV4cCI6MTY0NzMzMTI5MCwidXNlcklkIjoiMSJ9.sX4f3fSAgY4_F3mjpoDc2OetOQYe5-ICb7_Ea9L95Nk")
+    @Headers("token: " + str)
     Call<BaseResponse<String>> plan_postCallForSumTime(@Url String url, @FieldMap Map<String, String> map);
-
 
 
 }

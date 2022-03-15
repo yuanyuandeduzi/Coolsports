@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +18,7 @@ import com.example.coolsports.R;
 import com.example.coolsports.fragment.app_fragment_community;
 import com.example.coolsports.fragment.app_fragment_myself;
 import com.example.coolsports.fragment.app_fragment_plan;
-import com.example.sport.fragment.main_Fragment_sport;
+import com.example.sport.fragment.sport_Fragment_main;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class App_MainActivity extends AppCompatActivity {
@@ -42,7 +41,7 @@ public class App_MainActivity extends AppCompatActivity {
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        replaceFragment(new main_Fragment_sport());
+        replaceFragment(new sport_Fragment_main());
         initControl();
 
 
@@ -53,7 +52,7 @@ public class App_MainActivity extends AppCompatActivity {
                 int menuTd = item.getItemId();
                 switch (menuTd) {
                     case R.id.tab_1:
-                        replaceFragment(new main_Fragment_sport());
+                        replaceFragment(new sport_Fragment_main());
                         break;
                     case R.id.tab_2:
                         replaceFragment(new app_fragment_plan());

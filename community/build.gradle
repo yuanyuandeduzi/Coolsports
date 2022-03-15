@@ -1,12 +1,17 @@
-plugins {
-    id 'com.android.application'
+if(isModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+}else {
+    apply plugin: 'com.android.library'
 }
+
 
 android {
     compileSdk rootProject.ext.android.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.example.coolsports"
+        if(isModule.toBoolean()) {
+            applicationId "com.example.community"
+        }
         minSdk rootProject.ext.android.minSdk
         targetSdk rootProject.ext.android.targetSdk
         versionCode rootProject.ext.android.versionCode
@@ -25,15 +30,26 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets{
+        main{
+            if(isModule.toBoolean()){
+                manifest.srcFile 'src/main/AndroidManifest.xml'	//注意单引号
+            }else{
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+            }
+        }
+    }
 }
 
 dependencies {
 
     implementation project(":Baselibs")
-    implementation 'com.google.android.material:material:1.5.0'
-    if(isModule.toBoolean()) {
-        implementation project(":login")
-        implementation project(":community")
-    }
-    implementation project(":sport")
+
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.ycjiang:ImagePreview:2.3.5'
+
 }
