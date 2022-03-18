@@ -26,11 +26,15 @@ import com.example.sport.ui.Sport_Activity_Room;
 import com.example.sport.view.GradientProgressBar;
 import com.example.sport.view.PickerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

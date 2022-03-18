@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.community_release">
 
+    <ImageView
+        android:id="@+id/im_Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/p_4"
+        app:layout_constraintBottom_toBottomOf="@id/button_release"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="15dp"/>
+
     <Button
         android:id="@+id/button_release"
         android:layout_width="55dp"
@@ -29,7 +38,7 @@
 
 
     <EditText
-        android:id="@+id/editText_community"
+        android:id="@+id/editText_community_release"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="4"
@@ -45,12 +54,13 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_community"
+        android:id="@+id/recyclerView_community_release"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:overScrollMode="never"
         android:layout_marginTop="130dp"
-        app:layout_constraintLeft_toLeftOf="@id/editText_community"
-        app:layout_constraintRight_toRightOf="@id/editText_community"
+        app:layout_constraintLeft_toLeftOf="@id/editText_community_release"
+        app:layout_constraintRight_toRightOf="@id/editText_community_release"
         app:layout_constraintTop_toTopOf="@id/location_community_1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,14 @@
 package com.example.community.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -26,12 +27,12 @@ import java.util.List;
 
 public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.ViewHolder> {
 
-    private List<Uri> mList;
+    private List<String> mList;
     private List<ImageViewInfo> list;
     private Context context;
     private Activity activity;
 
-    public Rc_Adapter_release(Activity activity, List<Uri> list) {
+    public Rc_Adapter_release(Activity activity, List<String> list) {
         this.activity = activity;
         mList = list;
         context = activity.getApplicationContext();
@@ -53,8 +54,8 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                 @Override
                 public void onClick(View view) {
                     list = new ArrayList<>();
-                    for (Uri uri : mList) {
-                        list.add(new ImageViewInfo(uri.toString()));
+                    for (String s : mList) {
+                        list.add(new ImageViewInfo(s));
                     }
                     //图片预览（关键
                     GPreviewBuilder.from(activity)
@@ -66,6 +67,25 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                             .start();  //启动
                 }
             });
+
+            holder.im.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    holder.bt_delete.setVisibility(View.VISIBLE);
+                    holder.bt_delete.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(View view) {
+                            mList.remove(mList.get(n));
+                            Log.d("TAG", "onClick: ");
+                            notifyDataSetChanged();
+                            holder.bt_delete.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    return true;
+                }
+            });
+
         } else {
             holder.im.setImageResource(R.drawable.p_2);
             holder.im.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +100,7 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                             .thumbnailScale(0.85f)
                             .imageEngine(new GlideEngine())
-                            //.showPreview(true) // Default is `true`
+                            .showPreview(true) // Default is `true`
                             .forResult(23);
                 }
             });
@@ -98,11 +118,13 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private Button bt_delete;
         private ImageView im;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             im = itemView.findViewById(R.id.im_1);
+            bt_delete = itemView.findViewById(R.id.bt_delete);
         }
     }
 

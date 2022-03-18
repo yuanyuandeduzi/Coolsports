@@ -76,5 +76,4 @@ public class sport_fragment_location extends Fragment{
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(location_adapter_rc);
     }
-
 }

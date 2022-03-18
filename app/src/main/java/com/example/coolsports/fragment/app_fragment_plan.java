@@ -146,6 +146,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
             @Override
             public void onFailure(Call<BaseResponse<Record_upLoad[]>> call, Throwable t) {
+                mTv_4.setVisibility(View.VISIBLE);
             }
         });
 
