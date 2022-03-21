@@ -70,6 +70,7 @@ public class sport_fragment_location extends Fragment{
         tv_noRecord = view.findViewById(R.id.tv_fragment_location);
 
         recyclerView = view.findViewById(R.id.rv_fragment_location);
+        recyclerView.setItemViewCacheSize(20);
         location_adapter_rc = new Location_Adapter_Rc(mList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

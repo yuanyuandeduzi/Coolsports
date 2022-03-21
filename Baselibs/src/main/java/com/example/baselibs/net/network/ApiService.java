@@ -71,5 +71,5 @@ public interface ApiService {
     @Multipart
     @POST
     @Headers("token: " + str)
-    Call<BaseResponse<String>> getPartData(@Url String url,@Part List<MultipartBody.Part> list);
+    Call<BaseResponse<String>> community_postCallUploadPhoto(@Url String url, @Part List<MultipartBody.Part> list);
 }

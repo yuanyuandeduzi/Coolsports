@@ -65,7 +65,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 
     private double d;
 
-    //
+    //创建Dialog
     private void openDialog() {
         Dialog dialog = new Dialog(getContext(), R.style.MyDialog);
         View inflate = LayoutInflater.from(getContext()).inflate(R.layout.dialog_item, null);

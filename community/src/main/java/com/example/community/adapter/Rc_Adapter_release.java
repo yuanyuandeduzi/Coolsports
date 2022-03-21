@@ -32,6 +32,7 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
     private Context context;
     private Activity activity;
 
+
     public Rc_Adapter_release(Activity activity, List<String> list) {
         this.activity = activity;
         mList = list;
@@ -57,14 +58,20 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                     for (String s : mList) {
                         list.add(new ImageViewInfo(s));
                     }
-                    //图片预览（关键
-                    GPreviewBuilder.from(activity)
-                            .setData(list)  //数据
-                            .setCurrentIndex(n)  //图片下标
-                            .setSingleFling(true)  //是否在黑屏区域点击返回
-                            .setDrag(false)  //是否禁用图片拖拽返回
-                            .setType(GPreviewBuilder.IndicatorType.Number)  //指示器类型
-                            .start();  //启动
+                    if(holder.isVisibility) {
+                        holder.bt_delete.setVisibility(View.INVISIBLE);
+                        Log.d("TAG", "onClick11: ");
+                        holder.isVisibility = false;
+                    }else {
+                        //图片预览（关键
+                        GPreviewBuilder.from(activity)
+                                .setData(list)  //数据
+                                .setCurrentIndex(n)  //图片下标
+                                .setSingleFling(true)  //是否在黑屏区域点击返回
+                                .setDrag(false)  //是否禁用图片拖拽返回
+                                .setType(GPreviewBuilder.IndicatorType.Number)  //指示器类型
+                                .start();  //启动
+                    }
                 }
             });
 
@@ -77,17 +84,17 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                         @Override
                         public void onClick(View view) {
                             mList.remove(mList.get(n));
-                            Log.d("TAG", "onClick: ");
                             notifyDataSetChanged();
                             holder.bt_delete.setVisibility(View.INVISIBLE);
                         }
                     });
+                    holder.isVisibility = true;
                     return true;
                 }
             });
 
         } else {
-            holder.im.setImageResource(R.drawable.p_2);
+            holder.im.setImageResource(R.drawable.community_p_2);
             holder.im.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -117,7 +124,7 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
+        private boolean isVisibility = false;
         private Button bt_delete;
         private ImageView im;
 

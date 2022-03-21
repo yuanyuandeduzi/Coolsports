@@ -18,6 +18,13 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions{				//配置ARouter
+            annotationProcessorOptions{
+                arguments = [AROUTER_MODULE_NAME:project.getName()]
+            }
+        }
+
     }
 
     buildTypes {
@@ -43,5 +50,7 @@ android {
 }
 
 dependencies {
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
+
     implementation project(":Baselibs")
 }

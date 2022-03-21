@@ -73,7 +73,7 @@ public class community_release extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         initControl();
@@ -109,9 +109,9 @@ public class community_release extends AppCompatActivity {
         });
 
         mRecyclerView_release = findViewById(R.id.recyclerView_community_release);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         mRecyclerView_release.setLayoutManager(gridLayoutManager);
-        mRecyclerView_Adapter = new Rc_Adapter_release(community_release.this,mList);
+        mRecyclerView_Adapter = new Rc_Adapter_release(community_release.this, mList);
         mRecyclerView_release.setAdapter(mRecyclerView_Adapter);
 
         mEditText = findViewById(R.id.editText_community_release);
@@ -132,27 +132,41 @@ public class community_release extends AppCompatActivity {
 
     //初始化Dialog
     private void initDialog() {
-        AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
-        alterDialog.setTitle("是否保存草稿");
-        alterDialog.setPositiveButton("保存", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        if(mEditText.getText().length() == 0 && mList.size() == 0) {
+            finish();
+        }else {
+            AlertDialog.Builder alterDialog = new AlertDialog.Builder(this);
+            alterDialog.setTitle("是否保存草稿");
+            alterDialog.setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-                Data_rc data = new Data_rc();
-                data.setContent(mEditText.getText().toString());
-                data.setList(mList);
-                saveData(data);
-                finish();
-            }
-        });
-        alterDialog.setNegativeButton("不保存", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                AppDatabase.getInstance(getApplicationContext()).getDataDao().deleteAll();
-                finish();
-            }
-        });
-        alterDialog.show();
+                    Data_rc data = new Data_rc();
+                    data.setContent(mEditText.getText().toString());
+                    data.setList(mList);
+                    saveData(data);
+                    mEditText.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },100);
+                }
+            });
+            alterDialog.setNegativeButton("不保存", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    AppDatabase.getInstance(getApplicationContext()).getDataDao().deleteAll();
+                    mEditText.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },100);
+                }
+            });
+            alterDialog.show();
+        }
     }
 
     //初始化Matisse
@@ -172,7 +186,6 @@ public class community_release extends AppCompatActivity {
 
     //保存数据
     private void saveData(Data_rc data) {
-        Log.d("TAG", "saveData: ");
         AppDatabase.getInstance(getApplicationContext()).getDataDao().deleteAll();
         AppDatabase.getInstance(getApplicationContext()).getDataDao().insert(data);
     }
@@ -189,14 +202,12 @@ public class community_release extends AppCompatActivity {
         } else {
             List<Data_rc> list = AppDatabase.getInstance(getApplicationContext()).getDataDao().loadAll();
 
-            Log.d("TAG", "applyForPermission: " + list);
-            if(list.size() != 0) {
+            if (list.size() != 0) {
                 data = list.get(0);
-                Log.d("TAG", "applyForPermission: " + data.getContent());
                 mList.addAll(data.getList());
                 String content = data.getContent();
                 mEditText.setText(content);
-            }else {
+            } else {
                 initMatisse();
             }
         }
@@ -216,7 +227,7 @@ public class community_release extends AppCompatActivity {
                         }
                     }
                 }
-               initMatisse();
+                initMatisse();
         }
     }
 }

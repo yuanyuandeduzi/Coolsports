@@ -28,7 +28,6 @@ public class Rc_Adapter_main extends RecyclerView.Adapter<Rc_Adapter_main.ViewHo
     private List<Data_rc> mList;
     private Context context;
     private List<String> list;
-    private Activity activity;
 
     public Rc_Adapter_main(List<Data_rc> mList) {
         this.mList = mList;
@@ -76,11 +75,10 @@ public class Rc_Adapter_main extends RecyclerView.Adapter<Rc_Adapter_main.ViewHo
 
     private void initList() {
         list = new ArrayList<>();
-        list.add("content://media/external/images/media/388611");
-        list.add("content://media/external/images/media/388611");
-        list.add("content://media/external/images/media/388611");
-        list.add("content://media/external/images/media/388611");
-        list.add("content://media/external/images/media/388611");
+        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
+        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
+        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
+        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
 
     }
 }

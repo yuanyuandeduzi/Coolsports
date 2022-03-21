@@ -9,14 +9,16 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.community.fragment.community_fragment_main;
+import com.example.coolsports.BuildConfig;
 import com.example.coolsports.R;
-import com.example.coolsports.fragment.app_fragment_community;
-import com.example.coolsports.fragment.app_fragment_myself;
 import com.example.coolsports.fragment.app_fragment_plan;
 import com.example.sport.fragment.sport_Fragment_main;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,9 +43,14 @@ public class App_MainActivity extends AppCompatActivity {
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+        if (isDebug()) {
+            ARouter.openLog();
+            ARouter.openDebug();
+        }
+        ARouter.init(getApplication());
+
         replaceFragment(new sport_Fragment_main());
         initControl();
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
@@ -58,7 +65,11 @@ public class App_MainActivity extends AppCompatActivity {
                         replaceFragment(new app_fragment_plan());
                         break;
                     case R.id.tab_3:
-                        replaceFragment(new app_fragment_community());
+                        Object fragment = ARouter.getInstance().build("/community/community1").navigation();
+                        if(fragment == null) {
+                            Log.d("TAG", "onNavigationItemSelected: ");
+                        }
+                        replaceFragment(new community_fragment_main());
                         break;
                     case R.id.tab_4:
                         replaceFragment(new app_fragment_myself());
@@ -67,6 +78,10 @@ public class App_MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private boolean isDebug() {
+        return BuildConfig.DEBUG;
     }
 
     private void initControl() {

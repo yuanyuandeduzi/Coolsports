@@ -10,7 +10,7 @@
         android:id="@+id/im_Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/p_4"
+        android:src="@drawable/community_p_4"
         app:layout_constraintBottom_toBottomOf="@id/button_release"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginStart="15dp"/>

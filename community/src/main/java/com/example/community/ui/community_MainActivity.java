@@ -1,23 +1,16 @@
 package com.example.community.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
@@ -29,9 +22,7 @@ import com.previewlibrary.ZoomMediaLoader;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -108,7 +99,7 @@ public class community_MainActivity extends AppCompatActivity {
         list.add(filePart);
         list.add(filePart);
 
-        new UploadUtil().getPostService().getPartData("testImg",list).enqueue(new Callback<BaseResponse<String>>() {
+        new UploadUtil().getPostService().community_postCallUploadPhoto("testImg",list).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Log.d("TAG", "onResponse: " + response.body().getData());

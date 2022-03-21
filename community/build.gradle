@@ -24,8 +24,10 @@ android {
                 //room的数据库概要、记录
                 arguments = ["room.schemaLocation":
                                      "$projectDir/schemas".toString()]
+                arguments = [AROUTER_MODULE_NAME:project.getName()]
             }
         }
+
     }
 
     buildTypes {
@@ -55,6 +57,7 @@ android {
 dependencies {
 
     implementation project(":Baselibs")
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
 
     annotationProcessor "androidx.room:room-compiler:2.4.2"
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.7'

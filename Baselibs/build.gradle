@@ -11,6 +11,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions{				//配置ARouter
+            annotationProcessorOptions{
+                arguments = [AROUTER_MODULE_NAME:project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -29,6 +35,7 @@ dependencies {
 
     api rootProject.ext.androidxLibs
     api rootProject.ext.commonLibs
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
