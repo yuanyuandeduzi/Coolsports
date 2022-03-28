@@ -120,7 +120,7 @@ public class GradientProgressBar extends View {
 
         mBound2 = new Rect();
         mTextPaint2 = new Paint();
-        mTextPaint2.setColor(R.color.text_color_3);
+        mTextPaint2.setColor(getResources().getColor(R.color.text_color_3));
         mTextPaint2.setTextSize(50);
         mTextPaint2.setAntiAlias(true);
         mTextPaint2.setDither(true);

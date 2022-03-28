@@ -84,7 +84,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private PathSmoothTool pathSmoothTool;  //轨迹平滑处理类
     private LocationSource.OnLocationChangedListener mListener = null;
     private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
 
     //记录
     private PathRecord pathRecord;

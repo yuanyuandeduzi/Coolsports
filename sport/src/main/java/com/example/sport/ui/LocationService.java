@@ -28,7 +28,6 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("TAG1", "onCreate: ");
     }
 
     private final LocationService.myBind locationService = new myBind();

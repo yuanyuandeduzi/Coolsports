@@ -35,7 +35,7 @@ public class App_MainActivity extends AppCompatActivity {
         //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -72,7 +72,7 @@ public class App_MainActivity extends AppCompatActivity {
                         replaceFragment(new community_fragment_main());
                         break;
                     case R.id.tab_4:
-                        replaceFragment(new app_fragment_myself());
+                       // replaceFragment(new app_fragment_myself());
                         break;
                 }
                 return true;

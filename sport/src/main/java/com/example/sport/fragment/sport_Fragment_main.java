@@ -1,9 +1,14 @@
 package com.example.sport.fragment;
 
+import static android.content.Context.POWER_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +20,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.baselibs.net.BaseResponse;
@@ -23,6 +29,7 @@ import com.example.sport.R;
 import com.example.sport.ui.Sport_Activity_OutRoom;
 import com.example.sport.ui.Sport_Activity_Record;
 import com.example.sport.ui.Sport_Activity_Room;
+import com.example.sport.util.DialogUtils;
 import com.example.sport.view.GradientProgressBar;
 import com.example.sport.view.PickerView;
 
@@ -119,17 +126,33 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.run_outRoom) {
-            Intent intent1 = new Intent(getContext(), Sport_Activity_OutRoom.class);
-            startActivity(intent1);
+            if (getContext() != null && !isTrue(getContext())) {
+                new DialogUtils().initDialog(getContext());
+            } else {
+                Intent intent1 = new Intent(getContext(), Sport_Activity_OutRoom.class);
+                startActivity(intent1);
+            }
         } else if (id == R.id.run_room) {
-            Intent intent2 = new Intent(getContext(), Sport_Activity_Room.class);
-            startActivity(intent2);
+            if (getContext() != null && !isTrue(getContext())) {
+                new DialogUtils().initDialog(getContext());
+            } else {
+                Intent intent2 = new Intent(getContext(), Sport_Activity_Room.class);
+                startActivity(intent2);
+            }
         } else if (id == R.id.bt_target) {
             openDialog();
         } else if (id == R.id.bt_record) {
             Intent intent = new Intent(getContext(), Sport_Activity_Record.class);
             startActivity(intent);
         }
+    }
+
+    private boolean isTrue(Context mContext) {
+        PowerManager powerManager = (PowerManager) mContext.getSystemService(POWER_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return powerManager.isIgnoringBatteryOptimizations(mContext.getPackageName());
+        }
+        return false;
     }
 
     //更新总目标

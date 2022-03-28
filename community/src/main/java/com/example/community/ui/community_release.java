@@ -92,6 +92,7 @@ public class community_release extends AppCompatActivity {
 
     //初始化控件
     private void initControl() {
+        //发布空间
         mButton_release = findViewById(R.id.button_release);
         mButton_release.setOnClickListener(new View.OnClickListener() {
             @Override
