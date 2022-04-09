@@ -1,7 +1,9 @@
 package com.example.coolsports.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +15,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,6 +31,8 @@ import com.example.coolsports.R;
 import com.example.coolsports.adapter.Plan_Fragment_Adapter_Rc1;
 import com.example.coolsports.bean.Data;
 import com.example.coolsports.myView.MyPlanProgressBar;
+import com.example.coolsports.ui.App_MainActivity;
+import com.example.coolsports.ui.Plan_Activity_Discern;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
 import com.example.baselibs.net.network.bean.Record_upLoad;
@@ -53,6 +61,9 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private TextView mTv_3;
     private Button mButton_2;
     private TextView mTv_4;
+    private TextView mTv_5; //卡路里
+    private TextView mTv_6;
+    private Button mButton_3;
 
     //RecyclerView1
     private RecyclerView mRecyclerView1;
@@ -77,6 +88,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private int target = 100;
     private Data data;
     private Data dataNow;
+
+
+    //活动跳转
+    private ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
     @Nullable
     @Override
@@ -120,6 +135,25 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        intentActivityResultLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        //此处是跳转的result回调方法
+                        if (result.getData() != null && result.getResultCode() == Activity.RESULT_OK) {
+
+                        } else {
+
+                        }
+                    }
+                });
+
+    }
+
     //获取计划当天的记录
     private void uploadData(Data data) {
         UploadUtil util = new UploadUtil();
@@ -157,7 +191,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
                 String target = "0";
                 if (response.body() != null && response.isSuccessful()) {
                     target = response.body().getData();
-                    if(target != null) {
+                    if (target != null) {
                         mTv_3.setText("/" + target + "分钟");
                         myPlanProgressBar.setProgress(Float.parseFloat(target));
                     }
@@ -245,6 +279,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             }
         });
 
+        mTv_5 = view.findViewById(R.id.plan_tv_done);
+        mTv_6 = view.findViewById(R.id.plan_tv_advise);
+        mButton_3 = view.findViewById(R.id.plan_bt_discern);
+        mButton_3.setOnClickListener(this);
+
         mTv_2 = view.findViewById(R.id.tv_current);
         mTv_3 = view.findViewById(R.id.tv_sum);
         mTv_4 = view.findViewById(R.id.tv_4);
@@ -279,6 +318,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             uploadData(data);
         } else if (view.getId() == R.id.bt_plan_target) {
             openDialog();
+        } else if (view.getId() == R.id.plan_bt_discern) {
+
+            Intent intent = new Intent(getContext(), Plan_Activity_Discern.class);
+            intentActivityResultLauncher.launch(intent);
         }
     }
 

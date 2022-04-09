@@ -16,12 +16,19 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.baselibs.net.network.ApiService;
 import com.example.community.fragment.community_fragment_main;
 import com.example.coolsports.BuildConfig;
 import com.example.coolsports.R;
 import com.example.coolsports.fragment.app_fragment_plan;
 import com.example.sport.fragment.sport_Fragment_main;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App_MainActivity extends AppCompatActivity {
     private FrameLayout frameLayout;
@@ -94,4 +101,5 @@ public class App_MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout_app, fragment);	//向容器中添加或者替换碎片
         transaction.commit();	//提交事物
     }
+
 }

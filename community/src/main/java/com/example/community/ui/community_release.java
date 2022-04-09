@@ -36,6 +36,7 @@ import com.previewlibrary.ZoomMediaLoader;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -176,6 +177,8 @@ public class community_release extends AppCompatActivity {
                 .choose(MimeType.ofImage())
                 .countable(true)
                 .maxSelectable(9)
+                .capture(true)
+                .captureStrategy(new CaptureStrategy(true, "com.example.community.fileprovider"))
                 //.addFilter(new (320, 320, 5 * Filter.K * Filter.K))
                 .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.album_item_height))
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)

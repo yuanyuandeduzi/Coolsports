@@ -50,7 +50,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="077aca57240396afbc870fa5bc2e6f16" />
+            android:value="b589d3a607383d6341d312908e2c0724" />
 
         <activity
             android:name=".ui.Sport_Activity_Room"

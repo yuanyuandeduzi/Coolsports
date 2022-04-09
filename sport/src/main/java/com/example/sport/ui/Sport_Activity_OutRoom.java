@@ -26,6 +26,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -41,7 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
@@ -73,8 +73,9 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 //AMap.OnMyLocationChangeListener,
-public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.OnClickListener {
+public class Sport_Activity_OutRoom extends AppCompatActivity implements View.OnClickListener {
 
     //地图种的类
     protected static MapView mapView;
@@ -115,7 +116,12 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         //地图显示
         MapsInitializer.updatePrivacyShow(this, true, true);
@@ -158,14 +164,14 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             }
         });
 
-        Intent bindIntent = new Intent(this,LocationService.class);
+        Intent bindIntent = new Intent(this, LocationService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
         //创建Alarm并启动
         Intent intent = new Intent("LOCATION_CLOCK");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-// 每十五秒唤醒一次
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        // 每十五秒唤醒一次
         long second = 15 * 1000;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
 
@@ -187,7 +193,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     @Override
     protected void onDestroy() {
         mapView.onDestroy();
-        if(locationBinder != null) {
+        if (locationBinder != null) {
             unbindService(connection);
         }
         super.onDestroy();
@@ -427,7 +433,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         uiSettings.setZoomControlsEnabled(false);
     }
 
-    private LocationSource locationSource = new LocationSource() {
+    private final LocationSource locationSource = new LocationSource() {
         @Override
         public void activate(OnLocationChangedListener onLocationChangedListener) {
             mListener = onLocationChangedListener;
@@ -496,7 +502,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
 
     //服务
-    private ServiceConnection connection = new ServiceConnection() {	//创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
+    private ServiceConnection connection = new ServiceConnection() {    //创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             locationBinder = (LocationService.myBind) iBinder;

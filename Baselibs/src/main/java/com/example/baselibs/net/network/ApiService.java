@@ -71,4 +71,5 @@ public interface ApiService {
     @POST
     @Headers("token: " + str)
     Call<BaseResponse<String>> community_postCallUploadPhoto(@Url String url, @Part List<MultipartBody.Part> list);
+
 }

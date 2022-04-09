@@ -8,9 +8,10 @@
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/ic_launcher_background.xml" value="0.164" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/plan_bg_write.xml" value="0.164" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_main.xml" value="0.136" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_plan_discern.xml" value="0.2" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_community.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_myself.xml" value="0.2047008547008547" />
-        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_plan.xml" value="0.2047008547008547" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_plan.xml" value="0.264" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/plan_dialog_item.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/plan_item_rc.xml" value="0.4" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/menu/tab_menu.xml" value="0.264" />
@@ -21,6 +22,7 @@
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_1.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_2.xml" value="0.176" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_3.xml" value="0.20210970464135022" />
+        <entry key="..\:/Android_file/Coolsports/community/src/main/res/xml/file_paths_public.xml" value="0.1" />
         <entry key="..\:/Android_file/Coolsports/login/src/main/res/layout/login_activity_main.xml" value="0.1265625" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/drawable/background_sportmap.xml" value="0.2212962962962963" />
         <entry key="..\:/Android_file/Coolsports/sport/src/main/res/drawable/circle_sport_bg.xml" value="0.17229729729729729" />

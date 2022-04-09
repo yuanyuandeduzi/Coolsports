@@ -21,6 +21,7 @@ import com.previewlibrary.GPreviewBuilder;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                         Log.d("TAG", "onClick11: ");
                         holder.isVisibility = false;
                     }else {
-                        //图片预览（关键
+                        //图片预览 关键
                         GPreviewBuilder.from(activity)
                                 .setData(list)  //数据
                                 .setCurrentIndex(n)  //图片下标
@@ -102,6 +103,8 @@ public class Rc_Adapter_release extends RecyclerView.Adapter<Rc_Adapter_release.
                             .choose(MimeType.ofImage())
                             .countable(true)
                             .maxSelectable(9 - mList.size())
+                            .capture(true)
+                            .captureStrategy(new CaptureStrategy(true, "com.example.community.fileprovider"))
                             //.addFilter(new (320, 320, 5 * Filter.K * Filter.K))
                             .gridExpectedSize(activity.getResources().getDimensionPixelSize(R.dimen.album_item_height))
                             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
