@@ -1,6 +1,7 @@
 package com.example.coolsports.myView;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -59,6 +61,26 @@ public class MyPlanProgressBar extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthMeasureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthMeasureSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMeasureSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightMeasureSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        int height = getLayoutParams().height;
+        if (height == ActionBar.LayoutParams.WRAP_CONTENT) {
+            Log.d("TAG", "onMeasure: ");
+        }
+        if (widthMeasureSpecMode == MeasureSpec.AT_MOST && heightMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int) (mRadius + mCircleWidth) * 2, (int) (mRadius + mCircleWidth) * 2);
+        } else if (widthMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int) (mRadius + mCircleWidth) * 2, heightMeasureSpecSize);
+        } else if (heightMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(widthMeasureSpecSize, (int) (mRadius + mCircleWidth) * 2);
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mXCenter = getWidth() / 2;
@@ -80,7 +102,7 @@ public class MyPlanProgressBar extends View {
         rect.left = mXCenter - mRadius;
         rect.right = mXCenter + mRadius;
         float angle = 0;
-        if(mProgress != 0) {
+        if (mProgress != 0) {
             angle = mCurrentProgress / mProgress * 360F;
         }
         canvas.drawArc(rect, -90, angle, false, mProgressPaint);

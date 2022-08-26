@@ -38,6 +38,7 @@ public class community_fragment_main extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return LayoutInflater.from(getContext()).inflate(R.layout.activity_community_main, container, false);
+
     }
 
     @Override

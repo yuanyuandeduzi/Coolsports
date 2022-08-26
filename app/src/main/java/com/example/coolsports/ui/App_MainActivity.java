@@ -47,7 +47,7 @@ public class App_MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
         if (isDebug()) {
@@ -73,13 +73,13 @@ public class App_MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab_3:
                         Object fragment = ARouter.getInstance().build("/community/community1").navigation();
-                        if(fragment == null) {
+                        if (fragment == null) {
                             Log.d("TAG", "onNavigationItemSelected: ");
                         }
-                        replaceFragment(new community_fragment_main());
+                        replaceFragment((Fragment) fragment);
                         break;
                     case R.id.tab_4:
-                       // replaceFragment(new app_fragment_myself());
+                        // replaceFragment(new app_fragment_myself());
                         break;
                 }
                 return true;
@@ -96,10 +96,10 @@ public class App_MainActivity extends AppCompatActivity {
     }
 
     private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();		//获取FragmentManager对象
-        FragmentTransaction transaction = fragmentManager.beginTransaction();	//开启一个事务
-        transaction.replace(R.id.frameLayout_app, fragment);	//向容器中添加或者替换碎片
-        transaction.commit();	//提交事物
+        FragmentManager fragmentManager = getSupportFragmentManager();        //获取FragmentManager对象
+        FragmentTransaction transaction = fragmentManager.beginTransaction();    //开启一个事务
+        transaction.replace(R.id.frameLayout_app, fragment);    //向容器中添加或者替换碎片
+        transaction.commit();    //提交事物
     }
 
 }

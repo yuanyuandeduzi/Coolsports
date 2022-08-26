@@ -1,7 +1,9 @@
 package com.example.baselibs.net.network;
 
 import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.bean.Message;
 import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.baselibs.net.network.bean.Token;
 
 import java.util.List;
 import java.util.Map;
@@ -71,5 +73,19 @@ public interface ApiService {
     @POST
     @Headers("token: " + str)
     Call<BaseResponse<String>> community_postCallUploadPhoto(@Url String url, @Part List<MultipartBody.Part> list);
+
+    //识热量
+    @POST("token?grant_type=client_credentials&client_id=GMjmqqOG1GSahCNxQBL8Si4A&client_secret=0Q1Ge4HZtw2HbikZ0FRMmkgmPNce79xH")
+    Call<Token> plan_discern_postForToken();
+
+    @POST("dish")
+    @FormUrlEncoded
+    @Headers("Content-Type: application/json;charset=UTF-8")
+    Call<Message> plan_discern_postForMessage(@FieldMap Map<String, String> map);
+
+    @POST("dish")
+    @FormUrlEncoded
+    @Headers("Content-Type: application/json;charset=UTF-8")
+    Call<Object> plan_discern_postForMessage2(@FieldMap Map<String, String> map);
 
 }

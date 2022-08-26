@@ -26,8 +26,8 @@
 
     <com.example.sport.view.GradientProgressBar
         android:id="@+id/myProgress"
-        android:layout_width="330dp"
-        android:layout_height="330dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         app:circleColor="#BAF40F0F"
         app:circleCover="#ECE4E4"

@@ -61,6 +61,23 @@ public class GradientProgressBar extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthMeasureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthMeasureSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMeasureSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightMeasureSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        float length = (mRadius + mKdLength) * 2;
+        if(heightMeasureSpecMode == MeasureSpec.AT_MOST && widthMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int)length,(int)length);
+        }else if(heightMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(widthMeasureSpecSize,(int)length);
+        }else if(widthMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int) length, heightMeasureSpecSize);
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mXCenter = getWidth() / 2;
@@ -93,6 +110,11 @@ public class GradientProgressBar extends View {
             mKdPaths = getDialPaths(mXCenter,mYCenter,mRadius,mRadius - mKdLength, -i * 4 - 90);
             canvas.drawLines(mKdPaths,mProgressPaint);
         }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
     }
 
     //初始化画笔
