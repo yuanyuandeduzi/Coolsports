@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,25 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.baselibs.net.network.ApiService;
-import com.example.community.fragment.community_fragment_main;
-import com.example.coolsports.BuildConfig;
+import com.example.baselibs.BuildConfig;
 import com.example.coolsports.R;
-import com.example.coolsports.fragment.app_fragment_plan;
-import com.example.sport.fragment.sport_Fragment_main;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import org.greenrobot.eventbus.EventBus;
 
+
+@Route(path = "/app/main")
 public class App_MainActivity extends AppCompatActivity {
     private FrameLayout frameLayout;
     private BottomNavigationView bottomNavigationView;
+    @SuppressLint("StaticFieldLeak")
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +41,9 @@ public class App_MainActivity extends AppCompatActivity {
         //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
+        mContext = getBaseContext();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(
@@ -56,7 +56,7 @@ public class App_MainActivity extends AppCompatActivity {
         }
         ARouter.init(getApplication());
 
-        replaceFragment(new sport_Fragment_main());
+        replaceFragment((Fragment) ARouter.getInstance().build("/sport/sport1").navigation());
         initControl();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -66,20 +66,17 @@ public class App_MainActivity extends AppCompatActivity {
                 int menuTd = item.getItemId();
                 switch (menuTd) {
                     case R.id.tab_1:
-                        replaceFragment(new sport_Fragment_main());
+                        replaceFragment((Fragment) ARouter.getInstance().build("/sport/sport1").navigation());
                         break;
                     case R.id.tab_2:
-                        replaceFragment(new app_fragment_plan());
+                        replaceFragment((Fragment)ARouter.getInstance().build("/plan/plan1").navigation());
                         break;
                     case R.id.tab_3:
                         Object fragment = ARouter.getInstance().build("/community/community1").navigation();
-                        if (fragment == null) {
-                            Log.d("TAG", "onNavigationItemSelected: ");
-                        }
                         replaceFragment((Fragment) fragment);
                         break;
                     case R.id.tab_4:
-                        // replaceFragment(new app_fragment_myself());
+                         replaceFragment((Fragment)ARouter.getInstance().build("/user/user1").navigation());
                         break;
                 }
                 return true;
@@ -101,5 +98,10 @@ public class App_MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout_app, fragment);    //向容器中添加或者替换碎片
         transaction.commit();    //提交事物
     }
+
+    public static void sendToast(String s) {
+        Toast.makeText(mContext, s, Toast.LENGTH_SHORT).show();
+    }
+
 
 }

@@ -6,10 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +18,9 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.R;
@@ -33,19 +31,16 @@ import com.example.sport.util.DialogUtils;
 import com.example.sport.view.GradientProgressBar;
 import com.example.sport.view.PickerView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Route(path = "/sport/sport1")
 public class sport_Fragment_main extends Fragment implements View.OnClickListener {
 
     private Button mButton_room;
@@ -157,11 +152,10 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 
     //更新总目标
     private void updateTarget(Double d) {
-        UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
-        map.put("uid", "1");
+        map.put("uid", UploadUtil.uid);
         map.put("target", "" + d);
-        util.getPostService().sport_postCallForUpdateTarget("run/addSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+        UploadUtil.sentPostService().sport_postCallForUpdateTarget("run/addSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
             }
@@ -175,10 +169,9 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 
     //获取总目标
     private void getSportTargetAndDistance() {
-        UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
-        map.put("uid", "1");
-        util.getPostService().sport_postCallForgetTarget("run/getSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+        map.put("uid", UploadUtil.uid);
+        UploadUtil.sentPostService().sport_postCallForgetTarget("run/getSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 if (response.body() != null && response.body().isSuccess()) {
@@ -193,7 +186,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
             }
         });
 
-        util.getPostService().sport_postCallForgetSumDistance("run/getRunSumDistance", map).enqueue(new Callback<BaseResponse<String>>() {
+        UploadUtil.sentPostService().sport_postCallForgetSumDistance("run/getRunSumDistance", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 if (response.body() != null && response.body().isSuccess()) {

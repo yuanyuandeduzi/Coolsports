@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +24,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.coolsports.R;
 import com.example.coolsports.adapter.Plan_Fragment_Adapter_Rc1;
 import com.example.coolsports.bean.Data;
 import com.example.coolsports.myView.MyPlanProgressBar;
-import com.example.coolsports.ui.App_MainActivity;
 import com.example.coolsports.ui.Plan_Activity_Discern;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
@@ -42,7 +41,6 @@ import com.example.sport.view.PickerView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Route(path = "/plan/plan1")
 public class app_fragment_plan extends Fragment implements View.OnClickListener {
 
     //控件
@@ -156,11 +155,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
     //获取计划当天的记录
     private void uploadData(Data data) {
-        UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
-        map.put("uid", "1");
+        //uid
+        map.put("uid", UploadUtil.uid);
         map.put("day", data.getDayTime());
-        util.getPostService().plan_postCallForRecord("run/getPlanRunRecord", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
+        UploadUtil.sentPostService().plan_postCallForRecord("run/getPlanRunRecord", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
@@ -184,7 +183,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             }
         });
 
-        util.getPostService().plan_postCallForTarget("run/getPlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+        UploadUtil.sentPostService().plan_postCallForTarget("run/getPlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
@@ -204,7 +203,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             }
         });
 
-        util.getPostService().plan_postCallForSumTime("run/getPlanDaySumTime", map).enqueue(new Callback<BaseResponse<String>>() {
+        UploadUtil.sentPostService().plan_postCallForSumTime("run/getPlanDaySumTime", map).enqueue(new Callback<BaseResponse<String>>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
@@ -227,10 +226,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private void updateTarget(int target) {
         UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
-        map.put("uid", "1");
+        map.put("uid", UploadUtil.uid);
         map.put("day", dataNow.getDayTime());
         map.put("target", target + "");
-        util.getPostService().plan_postCallForUpdateTarget("run/updatePlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
+        util.sentPostService().plan_postCallForUpdateTarget("run/updatePlanTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
 
@@ -377,6 +376,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         attributes.y = 20;
         window.setAttributes(attributes);
         dialog.show();
+
     }
 
     //获取时间集合

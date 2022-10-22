@@ -64,8 +64,8 @@ public class sport_fragment_upload extends Fragment {
     @SuppressLint("CheckResult")
     private void upload() {
         Map<String, String> map = new HashMap<>();
-        map.put("uid", "1");
-        new UploadUtil().getPostService().sport_postCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
+        map.put("uid", UploadUtil.uid);
+        UploadUtil.sentPostService().sport_postCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {

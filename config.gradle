@@ -1,7 +1,7 @@
 ext {
 
     android = [
-            compileSdkVersion: 31,
+            compileSdkVersion: 32,
             buildToolsVersion: "30.0.2",
 
             minSdk           : 21,
@@ -27,7 +27,9 @@ ext {
             "room_rxjava" : "androidx.room:room-rxjava2:2.4.2",
 
             "retrofit2"   : 'com.squareup.retrofit2:retrofit:2.5.0',
-            "converter"   : 'com.squareup.retrofit2:converter-gson:2.0.2'
+            "converter"   : 'com.squareup.retrofit2:converter-gson:2.0.2',
+            "okhttp2"     : 'com.squareup.okhttp3:okhttp:3.10.0',
+            "eventBus"    : 'org.greenrobot:eventbus:3.1.1'
     ]
 
     androidxLibs = androidxDeps.values();

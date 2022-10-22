@@ -2,9 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.login">
 
-    <application android:allowBackup="true">
-        <activity
-            android:name=".Login_MainActivity"/>
-    </application>
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
 
+        <!-- 添加provider -->
+        <!--<provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.login.ui.Login_register"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>-->
+
+        <activity
+            android:name=".ui.Login_register"
+            android:exported="true" >
+        </activity>
+        <activity
+            android:name=".ui.Login_MainActivity"
+            android:exported="true">
+
+        </activity>
+    </application>
 </manifest>

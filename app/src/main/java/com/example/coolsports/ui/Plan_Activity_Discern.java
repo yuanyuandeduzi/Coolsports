@@ -108,7 +108,7 @@ public class Plan_Activity_Discern extends AppCompatActivity {
                 .capture(true)
                 .captureStrategy(new CaptureStrategy(true, "com.example.community.fileprovider"))
                 //.addFilter(new (320, 320, 5 * Filter.K * Filter.K))
-                .gridExpectedSize(getResources().getDimensionPixelSize(com.example.community.R.dimen.album_item_height))
+                //.gridExpectedSize(getResources().getDimensionPixelSize(com.example.community.R.dimen.album_item_height))
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 .thumbnailScale(0.85f)
                 .imageEngine(new GlideEngine())

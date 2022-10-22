@@ -1,6 +1,6 @@
 package com.example.baselibs.net.network.bean;
 
-
+//卡路里相关
 public class Token {
 
     private String refresh_token;

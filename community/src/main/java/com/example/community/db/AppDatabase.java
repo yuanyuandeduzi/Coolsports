@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.community.bean.Data_rc;
 
 @Database(entities = {Data_rc.class},version = 1,exportSchema = true)
-public abstract class AppDatabase extends RoomDatabase {
+public abstract  class AppDatabase extends RoomDatabase {
 
     private static AppDatabase sInstance;
 

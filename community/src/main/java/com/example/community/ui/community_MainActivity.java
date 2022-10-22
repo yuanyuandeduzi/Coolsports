@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.community.R;
@@ -101,7 +100,7 @@ public class community_MainActivity extends AppCompatActivity {
         list.add(filePart);
         list.add(filePart);
 
-        new UploadUtil().getPostService().community_postCallUploadPhoto("testImg",list).enqueue(new Callback<BaseResponse<String>>() {
+        UploadUtil.sentPostService().community_postCallUploadPhoto("testImg",list).enqueue(new Callback<BaseResponse<String>>() {
             @Override
             public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                 Log.d("TAG", "onResponse: " + response.body().getData());

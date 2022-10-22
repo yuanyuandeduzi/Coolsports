@@ -31,4 +31,13 @@ public class BaseResponse<T> implements IRespose<T> {
     public boolean isSuccess() {
         return code.equals("0");
     }
+
+    @Override
+    public String toString() {
+        return "BaseResponse{" +
+                "msg='" + msg + '\'' +
+                ", data=" + data +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

@@ -364,9 +364,9 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
-                map.put("uid", "1");
-                UploadUtil util = new UploadUtil();
-                ApiService postService = util.getPostService();
+                //uid
+                map.put("uid", UploadUtil.uid);
+                ApiService postService = UploadUtil.sentPostService();
                 postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
