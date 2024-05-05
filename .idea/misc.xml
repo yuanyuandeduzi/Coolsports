@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_SDK/platforms/android-32/data/res/drawable/ic_media_route_dark_material.xml" value="0.27" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/button_bg.xml" value="0.21518987341772153" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/color_bottom.xml" value="0.21476793248945147" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/ic_launcher_background.xml" value="0.164" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/plan_bg_write.xml" value="0.164" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/shape_blue_bg1.xml" value="0.268" />
-        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_main.xml" value="0.136" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_app_first.xml" value="0.2047008547008547" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_plan_discern.xml" value="0.2" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_user_alter.xml" value="0.297008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_community.xml" value="0.2047008547008547" />
@@ -22,10 +24,10 @@
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/menu/tab_menu.xml" value="0.264" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/drawable/bt_bg_green.xml" value="0.1545" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/activity_community_main.xml" value="0.2047008547008547" />
-        <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/activity_community_release.xml" value="0.2" />
+        <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/activity_community_release.xml" value="0.264" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_1.xml" value="0.2047008547008547" />
-        <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_2.xml" value="0.176" />
+        <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_2.xml" value="0.25" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/layout/rc_item_3.xml" value="0.20210970464135022" />
         <entry key="..\:/Android_file/Coolsports/community/src/main/res/xml/file_paths_public.xml" value="0.1" />
         <entry key="..\:/Android_file/Coolsports/login/src/main/res/drawable/shape_blue_bg1.xml" value="0.268" />

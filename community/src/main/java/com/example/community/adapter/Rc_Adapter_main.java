@@ -31,7 +31,6 @@ public class Rc_Adapter_main extends RecyclerView.Adapter<Rc_Adapter_main.ViewHo
 
     public Rc_Adapter_main(List<Data_rc> mList) {
         this.mList = mList;
-        initList();
     }
 
     @NonNull
@@ -50,6 +49,7 @@ public class Rc_Adapter_main extends RecyclerView.Adapter<Rc_Adapter_main.ViewHo
         holder.tv_content.setText(data.getContent());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
         holder.recyclerView.setLayoutManager(gridLayoutManager);
+        initList(position);
         holder.recyclerView.setAdapter(new Rc_Adapter_main_inner(list));
     }
 
@@ -73,12 +73,34 @@ public class Rc_Adapter_main extends RecyclerView.Adapter<Rc_Adapter_main.ViewHo
         }
     }
 
-    private void initList() {
-        list = new ArrayList<>();
-        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
-        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
-        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
-        list.add("https://presist.oss-cn-beijing.aliyuncs.com/head/2022-03-16/0a16abf415b94cfdb72e77b570b09068-file");
-
+    private void initList(int position) {
+        if(position == 0) {
+            list = new ArrayList<>();
+            list.add("content://media/external/images/media/1000008478");
+            list.add("content://media/external/images/media/1000008468");
+            list.add("content://media/external/images/media/1000008467");
+            list.add("content://media/external/images/media/1000008465");
+        }else if (position == 1) {
+            list = new ArrayList<>();
+            list.add("content://media/external/images/media/1000008571");
+            list.add("content://media/external/images/media/1000008563");
+            list.add("content://media/external/images/media/1000008569");
+            list.add("content://media/external/images/media/1000008560");
+            list.add("content://media/external/images/media/1000008547");
+            list.add("content://media/external/images/media/1000008574");
+        }else if (position == 2) {
+            list = new ArrayList<>();
+            list.add("content://media/external/images/media/1000008571");
+            list.add("content://media/external/images/media/1000008563");
+            list.add("content://media/external/images/media/1000008569");
+            list.add("content://media/external/images/media/1000008468");
+            list.add("content://media/external/images/media/1000008467");
+        }else {
+            list = new ArrayList<>();
+            list.add("content://media/external/images/media/1000008571");
+            list.add("content://media/external/images/media/1000008563");
+            list.add("content://media/external/images/media/1000008569");
+            list.add("content://media/external/images/media/1000008468");
+        }
     }
 }

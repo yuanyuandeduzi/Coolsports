@@ -79,12 +79,12 @@ public interface ApiService {
 
 
     //识热量
-    @POST("token?grant_type=client_credentials&client_id=GMjmqqOG1GSahCNxQBL8Si4A&client_secret=0Q1Ge4HZtw2HbikZ0FRMmkgmPNce79xH")
+    @POST("token?grant_type=client_credentials&client_id=GMjmqqOG1GSahCNxQBL8Si4A&client_secret=fan2CKKniFubbCMUFHal91lIe3FF0lWS")
     Call<Token> plan_discern_postForToken();
 
     @POST("dish")
     @FormUrlEncoded
-    @Headers("Content-Type: application/json;charset=UTF-8")
+    @Headers("Content-Type: application/x-www-form-urlencoded")
     Call<Message> plan_discern_postForMessage(@FieldMap Map<String, String> map);
 
     @POST("dish")

@@ -121,19 +121,19 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.run_outRoom) {
-            if (getContext() != null && !isTrue(getContext())) {
-                new DialogUtils().initDialog(getContext());
-            } else {
+//            if (getContext() != null && !isTrue(getContext())) {
+//                new DialogUtils().initDialog(getContext());
+//            } else {
                 Intent intent1 = new Intent(getContext(), Sport_Activity_OutRoom.class);
                 startActivity(intent1);
-            }
+//            }
         } else if (id == R.id.run_room) {
-            if (getContext() != null && !isTrue(getContext())) {
-                new DialogUtils().initDialog(getContext());
-            } else {
+//            if (getContext() != null && !isTrue(getContext())) {
+//                new DialogUtils().initDialog(getContext());
+//            } else {
                 Intent intent2 = new Intent(getContext(), Sport_Activity_Room.class);
                 startActivity(intent2);
-            }
+//            }
         } else if (id == R.id.bt_target) {
             openDialog();
         } else if (id == R.id.bt_record) {

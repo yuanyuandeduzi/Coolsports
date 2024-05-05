@@ -31,9 +31,6 @@ public class community_fragment_main extends Fragment {
     private RecyclerView recyclerView;
     private List<Data_rc> mList;
 
-    public community_fragment_main() {
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,12 +65,30 @@ public class community_fragment_main extends Fragment {
 
     private void initList() {
         mList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Data_rc data = new Data_rc();
-            data.setName("圆圆的肚子" + i);
-            data.setContent("圆圆的肚子" + "\t大家破案的" + "joamoimoimoimoihdsfsdfsadfsadfafasdfsod\tnkjlcs");
-            data.setHead("content://media/external/images/media/284647");
-            mList.add(data);
-        }
+        Data_rc data = new Data_rc();
+        data.setName("圆圆的肚子");
+        data.setContent("圆圆的肚子" + "\t闲来无事");
+        data.setHead("content://media/external/images/media/1000001277");
+        mList.add(data);
+        Data_rc data1 = new Data_rc();
+        data1.setName("土豆大侠");
+        data1.setContent("番薯番薯，我是土豆");
+        data1.setHead("content://media/external/images/media/1000000835");
+        mList.add(data1);
+        Data_rc data2 = new Data_rc();
+        data2.setName("一颗包子");
+        data2.setContent("包子要想好吃，还得皮包馅多");
+        data2.setHead("content://media/external/images/media/1000000833");
+        mList.add(data2);
+        Data_rc data3 = new Data_rc();
+        data3.setName("天上飞鸟");
+        data3.setContent("做一只在天上永不下落的飞鸟，直至死去！！！");
+        data3.setHead("content://media/external/images/media/1000001277");
+        mList.add(data3);
+        Data_rc data4 = new Data_rc();
+        data4.setName("挖土机");
+        data4.setContent("挖掘机技术哪家强，中国山东找蓝翔，学挖掘机技术，认准蓝翔职业技术学院。");
+        data4.setHead("content://media/external/images/media/1000001277");
+        mList.add(data4);
     }
 }

@@ -169,6 +169,7 @@ public class Plan_Activity_Discern extends AppCompatActivity {
             public void onResponse(Call<Token> call, Response<Token> response) {
                 assert response.body() != null;
                 token = response.body().getAccess_token();
+                Log.d("TAG111", "onResponse: " + token);
             }
 
             @Override
@@ -177,8 +178,6 @@ public class Plan_Activity_Discern extends AppCompatActivity {
             }
         });
     }
-
-    private Message.Data result;
 
     //获取卡路里信息
     private void getMassage(String s) {
@@ -191,30 +190,15 @@ public class Plan_Activity_Discern extends AppCompatActivity {
         map.put("filter_threshold", "0.8");
         map.put("access_token", token);
         map.put("top_num", "1");
-        /*mRetrofit.create(ApiService.class).plan_discern_postForMessage2(map).enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.d("TAG", "onResponse: " + response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-
-            }
-        });*/
 
         mRetrofit.create(ApiService.class).plan_discern_postForMessage(map).enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
-                assert response.body() != null;
                 Message.Data result = response.body().getResult()[0];
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTv_1.setText("菜名：" + result.getName());
-                        mTv_2.setText("热量：" + result.getCalorie() + "ka");
-                        Log.d("TAG", "run: ");
-                    }
+                runOnUiThread(() -> {
+                    mTv_1.setText("菜名：" + result.getName());
+                    mTv_2.setText("热量：" + result.getCalorie() + "ka");
+                    Log.d("TAG", "run: ");
                 });
             }
 
@@ -223,5 +207,6 @@ public class Plan_Activity_Discern extends AppCompatActivity {
 
             }
         });
+
     }
 }

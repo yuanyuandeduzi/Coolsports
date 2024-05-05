@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -82,7 +83,6 @@ public class community_release extends AppCompatActivity {
         applyForPermission();
 
         ZoomMediaLoader.getInstance().init(new ImagePreviewLoader());
-
     }
 
     @Override
@@ -127,6 +127,7 @@ public class community_release extends AppCompatActivity {
             List<Uri> list = Matisse.obtainResult(data);
             for (Uri uri : list) {
                 mList.add(uri.toString());
+                Log.d("TAG444", "onActivityResult: " + uri);
             }
             mRecyclerView_Adapter.notifyDataSetChanged();
         }
@@ -142,7 +143,6 @@ public class community_release extends AppCompatActivity {
             alterDialog.setPositiveButton("保存", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
                     Data_rc data = new Data_rc();
                     data.setContent(mEditText.getText().toString());
                     data.setList(mList);
