@@ -9,9 +9,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.baselibs.net.network.bean.User;
-import com.example.login.ui.Login_MainActivity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,39 +42,8 @@ public class ViewModel_MainActivity extends ViewModel {
     public void setCode(String code) {
         person people = this.people.getValue();
         assert people != null;
-        people.code = code;
+        people.password = code;
         this.people.setValue(people);
-    }
-
-    //验证验证码
-    public void checkCode() {
-        if (people.getValue() == null) {
-            return;
-        }
-        try {
-            UploadUtil.loginPostService().login_postCheckCode("login/byCode", people.getValue().phone, people.getValue().code).enqueue(new Callback<BaseResponse<User>>() {
-                @Override
-                public void onResponse(Call<BaseResponse<User>> call, Response<BaseResponse<User>> response) {
-                    assert response.body() != null;
-                    msg.setValue(response.body().getMsg());
-                    User data = response.body().getData();
-                    if (data != null) {
-                        UploadUtil.uid = data.getUid();
-                        data.setHeadUrl("");
-//                        UploadUtil.user = data;
-                        EventBus.getDefault().postSticky(data);
-                        Log.d("TAG", "onResponse11: " + data);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BaseResponse<User>> call, Throwable t) {
-                    user.setValue(null);
-                }
-            });
-        } catch (Exception ignored) {
-
-        }
     }
 
     //获取验证码
@@ -106,7 +72,7 @@ public class ViewModel_MainActivity extends ViewModel {
 
     public static class person {
         private String phone = "";
-        private String code = "";
+        private String password = "";
 
         public String getPhone() {
             return phone;
@@ -116,16 +82,24 @@ public class ViewModel_MainActivity extends ViewModel {
             this.phone = phone;
         }
 
-        public String getCode() {
-            return code;
+        public String getPassword() {
+            return password;
         }
 
-        public void setCode(String code) {
-            this.code = code;
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         public boolean isStart() {
-            if (!"".equals(phone) && !"".equals(code)) {
+            if (!"".equals(phone) && !"".equals(password)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public boolean isEnableRegister() {
+            if (!"".equals(phone) && "".equals(password)) {
                 return true;
             } else {
                 return false;

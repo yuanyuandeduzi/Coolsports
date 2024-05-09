@@ -34,11 +34,10 @@ import com.example.coolsports.myView.MyPlanProgressBar;
 import com.example.coolsports.ui.Plan_Activity_Discern;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
-import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.util.TimeUtil;
 import com.example.sport.view.PickerView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -46,10 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,7 +79,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
     //RecyclerView2
     private RecyclerView mRecyclerView2;
-    private List<Record_upLoad> mList2 = new ArrayList<>();
+    private List<DbRecord> mList2 = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager2;
     private Upload_Adapter_Rc upload_adapter_rc2;
 
@@ -164,13 +159,13 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         //uid
         map.put("uid", UploadUtil.uid);
         map.put("day", data.getDayTime());
-        UploadUtil.sentPostService().plan_postCallForRecord("run/getPlanRunRecord", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
+        UploadUtil.sentPostService().plan_postCallForRecord("run/getPlanRunRecord", map).enqueue(new Callback<BaseResponse<DbRecord[]>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
-                BaseResponse<Record_upLoad[]> body = response.body();
+            public void onResponse(Call<BaseResponse<DbRecord[]>> call, Response<BaseResponse<DbRecord[]>> response) {
+                BaseResponse<DbRecord[]> body = response.body();
                 if (body != null && body.isSuccess()) {
-                    Record_upLoad[] data1 = body.getData();
+                    DbRecord[] data1 = body.getData();
                     mList2.clear();
                     Collections.addAll(mList2, data1);
                     if (mList2.size() != 0) {
@@ -183,7 +178,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<Record_upLoad[]>> call, Throwable t) {
+            public void onFailure(Call<BaseResponse<DbRecord[]>> call, Throwable t) {
                 mTv_4.setVisibility(View.VISIBLE);
             }
         });

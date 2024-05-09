@@ -5,6 +5,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.baselibs.net.network.bean.DbRecord;
+
 import java.util.List;
 
 import io.reactivex.Flowable;

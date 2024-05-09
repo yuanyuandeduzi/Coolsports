@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sport.R;
-import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.baselibs.net.network.bean.DbRecord;
 
 import java.util.List;
 
 public class Upload_Adapter_Rc extends RecyclerView.Adapter<Upload_Adapter_Rc.ViewHolder>{
 
-    private List<Record_upLoad> mList;
+    private List<DbRecord> mList;
 
-    public Upload_Adapter_Rc(List<Record_upLoad> mList) {
+    public Upload_Adapter_Rc(List<DbRecord> mList) {
         this.mList = mList;
     }
 
@@ -30,10 +30,10 @@ public class Upload_Adapter_Rc extends RecyclerView.Adapter<Upload_Adapter_Rc.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Record_upLoad record_upLoad = mList.get(position);
-        holder.tv_time.setText(record_upLoad.getRunWhen());
-        holder.tv_useTime.setText(record_upLoad.getRunTime());
-        holder.tv_distance.setText(record_upLoad.getDistance());
+        DbRecord dbRecord_ = mList.get(position);
+        holder.tv_time.setText(dbRecord_.getRunWhen());
+        holder.tv_useTime.setText(dbRecord_.getRunTime());
+        holder.tv_distance.setText(dbRecord_.getDistance());
     }
 
     @Override

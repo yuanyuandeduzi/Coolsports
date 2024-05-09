@@ -90,19 +90,11 @@ public class app_fragment_user extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-
         if (isDebug()) {
             ARouter.openLog();
             ARouter.openDebug();
         }
         ARouter.init(getActivity().getApplication());
-    }
-
-    @Subscribe
-    public void getEventbus(User user) {
-       UploadUtil.user = user;
-       initMenu(user);
     }
 
     @Override

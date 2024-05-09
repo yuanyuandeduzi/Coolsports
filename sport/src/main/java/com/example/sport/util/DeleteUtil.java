@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.adapter.Location_Adapter_Rc;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
 
 import java.util.HashMap;
 import java.util.Map;

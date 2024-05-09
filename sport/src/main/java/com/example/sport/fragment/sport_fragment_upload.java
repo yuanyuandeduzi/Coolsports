@@ -17,8 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.baselibs.net.BaseResponse;
 import com.example.sport.R;
 import com.example.sport.adapter.Upload_Adapter_Rc;
-import com.example.baselibs.net.network.bean.Record_upLoad;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.baselibs.net.network.UploadUtil;
+import com.example.sport.db.AppDataBaseNet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ import retrofit2.Response;
 
 public class sport_fragment_upload extends Fragment {
 
-    private List<Record_upLoad> mList = new ArrayList<>();
+    private List<DbRecord> mList = new ArrayList<>();
     private RecyclerView rc_upload;
     private TextView tv_upload;
     private Upload_Adapter_Rc rc_Adapter;
@@ -46,8 +47,8 @@ public class sport_fragment_upload extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        upload();
         initControl(view);
+        upload();
     }
 
     private void initControl(View view) {
@@ -61,36 +62,50 @@ public class sport_fragment_upload extends Fragment {
         tv_upload = view.findViewById(R.id.tv_fragment_upload);
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "NotifyDataSetChanged"})
     private void upload() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", UploadUtil.uid);
-        UploadUtil.sentPostService().sport_postCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<Record_upLoad[]>>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onResponse(Call<BaseResponse<Record_upLoad[]>> call, Response<BaseResponse<Record_upLoad[]>> response) {
-                if (response.body() == null) {
-                    Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                if (response.body().isSuccess()) {
-                    Record_upLoad[] data = response.body().getData();
-                    Collections.addAll(mList, data);
-                    if(mList.size() != 0) {
-                        tv_upload.setVisibility(View.INVISIBLE);
-                    }
-                    rc_Adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-                }
+        List<DbRecord> result = AppDataBaseNet.getInstance(this.getContext()).getDao().query(UploadUtil.user.getPhone());
+        if(result == null) {
+            Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
+            mList.clear();
+            mList.addAll(result);
+            if(mList.size() != 0) {
+                tv_upload.setVisibility(View.INVISIBLE);
             }
+            rc_Adapter.notifyDataSetChanged();
+        }
 
-            @Override
-            public void onFailure(Call<BaseResponse<Record_upLoad[]>> call, Throwable t) {
-                Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Map<String, String> map = new HashMap<>();
+//        map.put("uid", UploadUtil.uid);
+//        UploadUtil.sentPostService().sport_postCall1("run/queryRunRecordsByUid", map).enqueue(new Callback<BaseResponse<DbRecord[]>>() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onResponse(Call<BaseResponse<DbRecord[]>> call, Response<BaseResponse<DbRecord[]>> response) {
+//                if (response.body() == null) {
+//                    Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                if (response.body().isSuccess()) {
+//                    DbRecord[] data = response.body().getData();
+//                    Collections.addAll(mList, data);
+//                    if(mList.size() != 0) {
+//                        tv_upload.setVisibility(View.INVISIBLE);
+//                    }
+//                    rc_Adapter.notifyDataSetChanged();
+//                    Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<BaseResponse<DbRecord[]>> call, Throwable t) {
+//                Toast.makeText(getContext(), "请求失败！", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }

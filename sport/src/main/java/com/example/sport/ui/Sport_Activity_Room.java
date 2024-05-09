@@ -42,9 +42,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.R;
+import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
 import com.example.baselibs.net.network.ApiService;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
@@ -84,6 +85,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
     private int stepStart = 0;
     private PathRecord pathRecord = new PathRecord();
     private DbRecord dbRecord;
+    private Context mContext;
 
     //对象
     private SensorManager sensorManager;
@@ -142,6 +144,8 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        mContext = this;
     }
 
     @Override
@@ -243,7 +247,14 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Map<String, String> map = new HashMap<>();
+                List<Long> result = AppDataBaseNet.getInstance(mContext).getDao().insert(dbRecord);
+                if(result != null) {
+                    Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                }
+
+            /* Map<String, String> map = new HashMap<>();
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
@@ -270,7 +281,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
                         DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                         Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 finish();
             }
         });

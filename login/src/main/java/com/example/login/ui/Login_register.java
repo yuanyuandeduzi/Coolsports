@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewbinding.ViewBinding;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -16,7 +15,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -24,6 +22,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.baselibs.MyView.MessageChange;
 import com.example.baselibs.net.network.bean.User;
+import com.example.baselibs.room.baseroom.UserDataBase;
+import com.example.baselibs.room.dao.UserDao;
 import com.example.login.R;
 import com.example.login.databinding.ActivityLoginRegisterBinding;
 import com.example.login.viewModel.ViewModel_register;
@@ -38,6 +38,7 @@ public class Login_register extends AppCompatActivity {
 
     private ActivityLoginRegisterBinding viewBinding;
     private ViewModel_register viewModel;
+    private UserDao userDao = UserDataBase.getInstance(this).getUserDao();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,8 @@ public class Login_register extends AppCompatActivity {
         viewBinding.btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.addInfo();
+                userDao.insert(viewModel.getUser().getValue());
+                finish();
             }
         });
         LifecycleOwner owner = this;
@@ -130,16 +132,6 @@ public class Login_register extends AppCompatActivity {
                 });
             }
         });
-
-        viewModel.getFinish().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean) {
-                    finish();
-                }
-            }
-        });
-
     }
 
     @SuppressLint("CheckResult")
@@ -191,8 +183,6 @@ public class Login_register extends AppCompatActivity {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
                             Toast.makeText(Login_register.this, "权限未申请", Toast.LENGTH_SHORT).show();
-                            //finish();
-                           // return;
                         }
                     }
                 }

@@ -1,41 +1,36 @@
 package com.example.sport.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.R;
+import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
-import com.example.baselibs.net.network.ApiService;
-import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.util.DeleteUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_Rc.ViewHolder> {
 
     private List<DbRecord> mList;
+    private Context mContext;
 
-    public Location_Adapter_Rc(List<DbRecord> mList) {
+    public Location_Adapter_Rc(List<DbRecord> mList, Context context) {
         this.mList = mList;
+        mContext = context;
     }
 
     @NonNull
@@ -131,7 +126,15 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Map<String, String> map = new HashMap<>();
+                AppDataBaseNet.getInstance(mContext).getDao().insert(dbRecord);
+
+                DbManger.getInstance(view.getContext()).delete(dbRecord).subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        DeleteUtil.getInstance().getMap().remove(holder);
+                    }
+                });
+                /*Map<String, String> map = new HashMap<>();
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
@@ -160,7 +163,7 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
                     public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
                         Toast.makeText(view.getContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
             }
         });
         alterDialog.show();

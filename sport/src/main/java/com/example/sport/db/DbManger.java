@@ -5,8 +5,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.example.baselibs.net.network.bean.DbRecord;
+
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -21,8 +22,6 @@ public class DbManger {
 
     private DbManger() {
     }
-
-    ;
 
     public static DbManger sInstance;
 
@@ -43,7 +42,7 @@ public class DbManger {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> emitter) throws Exception {
-                AppDataBase.getInstance(context).getDao().insert(dbRecord);
+                AppDataBaseLocation.getInstance(context).getDbRecordDao().insert(dbRecord);
                 emitter.onNext(1);
             }
         }).subscribeOn(Schedulers.io())
@@ -52,7 +51,7 @@ public class DbManger {
 
     //查询
     public Flowable<List<DbRecord>> getAll() {
-        return AppDataBase.getInstance(context).getDao().loadAll()
+        return AppDataBaseLocation.getInstance(context).getDbRecordDao().loadAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -62,7 +61,7 @@ public class DbManger {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> emitter) throws Exception {
-                AppDataBase.getInstance(context).getDao().delete(dbRecord);
+                AppDataBaseLocation.getInstance(context).getDbRecordDao().delete(dbRecord);
                 emitter.onNext(1);
             }
         }).subscribeOn(Schedulers.io())
@@ -74,7 +73,7 @@ public class DbManger {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> emitter) throws Exception {
-                AppDataBase.getInstance(context).getDao().deleteAll();
+                AppDataBaseLocation.getInstance(context).getDbRecordDao().deleteAll();
                 emitter.onNext(1);
             }
         }).subscribeOn(Schedulers.io())

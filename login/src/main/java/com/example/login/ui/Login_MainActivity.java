@@ -18,9 +18,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.baselibs.BuildConfig;
 import com.example.baselibs.MyView.MessageChange;
 import com.example.baselibs.net.network.UploadUtil;
+import com.example.baselibs.net.network.bean.User;
+import com.example.baselibs.room.baseroom.UserDataBase;
+import com.example.baselibs.room.dao.UserDao;
 import com.example.login.R;
 import com.example.login.databinding.LoginActivityMainBinding;
-import com.example.login.utils.CountUtil;
 import com.example.login.viewModel.ViewModel_MainActivity;
 
 import java.util.Objects;
@@ -32,6 +34,7 @@ public class Login_MainActivity extends AppCompatActivity implements View.OnClic
     private ViewModel_MainActivity viewModel;
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
+    private UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,41 +54,20 @@ public class Login_MainActivity extends AppCompatActivity implements View.OnClic
         ARouter.init(getApplication());
 
         mContext = getBaseContext();
-        viewModel = new ViewModelProvider(this).get(ViewModel_MainActivity.class);
-        viewBinding.buttonStartCode.setOnClickListener(this);
-        viewBinding.login.setOnClickListener(this);
-
-        viewModel.getMsg().observe(this, new Observer<String>() {
+        new Thread(new Runnable() {
             @Override
-            public void onChanged(String s) {
-                //未注册验证码不正确  未注册验证码正确
-                switch (s) {
-                    case "已注册验证码不正确":
-                    case "未注册验证码不正确":
-                        sendToast("电话号或验证码不正确！！");
-                        break;
-                    case "未注册验证码正确":
-                        Intent intent = new Intent(Login_MainActivity.this, Login_register.class);
-                        intent.putExtra("phone", Objects.requireNonNull(viewModel.getPeople().getValue()).getPhone());
-                        startActivity(intent);
-                        break;
-                    case "已注册验证码正确":
-                        if (UploadUtil.isStart) {
-                            ARouter.getInstance().build("/app/main").navigation();
-                        }
-                        UploadUtil.isLogin.setValue(true);
-                        UploadUtil.isStart = false;
-                        finish();
-                        break;
-                }
+            public void run() {
+                userDao = UserDataBase.getInstance(mContext).getUserDao();
             }
-        });
+        }).start();
+        viewModel = new ViewModelProvider(this).get(ViewModel_MainActivity.class);
+        viewBinding.login.setOnClickListener(this);
+        viewBinding.register.setOnClickListener(this);
 
         viewBinding.loginTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build("/app/main").navigation();
-                UploadUtil.isStart = false;
                 finish();
             }
         });
@@ -95,6 +77,8 @@ public class Login_MainActivity extends AppCompatActivity implements View.OnClic
             public void onChanged(ViewModel_MainActivity.person person) {
                 boolean start = Objects.requireNonNull(viewModel.getPeople().getValue()).isStart();
                 viewBinding.login.setEnabled(start);
+                boolean enableRegister = viewModel.getPeople().getValue().isEnableRegister();
+                viewBinding.register.setEnabled(enableRegister);
             }
         });
 
@@ -112,6 +96,11 @@ public class Login_MainActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
+        viewBinding.register.setOnClickListener(v -> {
+            Intent intent = new Intent(Login_MainActivity.this, Login_register.class);
+            intent.putExtra("phone", Objects.requireNonNull(viewModel.getPeople().getValue()).getPhone());
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -129,12 +118,24 @@ public class Login_MainActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.login) {
-            viewModel.checkCode();
-        } else if (id == R.id.button_startCode) {
-            new CountUtil(60 * 1000, 1000, viewBinding.buttonStartCode).start();
-            viewModel.getCode();
+            User user = userDao.query(viewModel.getPeople().getValue().getPhone());
+            if (user != null && user.getPassword().equals(viewModel.getPeople().getValue().getPassword())) {
+                UploadUtil.user = user;
+                UploadUtil.isLogin.setValue(true);
+                ARouter.getInstance().build("/app/main").navigation();
+                sendToast("登录成功");
+                finish();
+            } else if (user != null && !user.getPassword().equals(viewModel.getPeople().getValue().getPassword())) {
+                sendToast("密码错误,请重试！");
+            } else {
+                sendToast("账号不存在,请先注册!");
+                Intent intent = new Intent(Login_MainActivity.this, Login_register.class);
+                intent.putExtra("phone", Objects.requireNonNull(viewModel.getPeople().getValue()).getPhone());
+                startActivity(intent);
+            }
         }
     }
+
 
     private boolean isDebug() {
         return BuildConfig.DEBUG;

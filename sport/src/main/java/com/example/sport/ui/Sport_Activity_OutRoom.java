@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -55,9 +56,10 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.R;
+import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
 import com.example.baselibs.net.network.ApiService;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
@@ -106,6 +108,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
     private MyProgressButton myProgressButton;
 
     private LocationService.myBind locationBinder;
+    private Context mContext;
+
 
     @SuppressLint({"ShortAlarm", "InvalidWakeLockTag"})
     @Override
@@ -154,6 +158,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
                 dbRecord.setRunTime(format1);
                 dbRecord.setRunWhen(getCurrentTime());
                 dbRecord.setDistance(format);
+                dbRecord.setPhone(UploadUtil.user.getPhone());
 
                 initDialog();
             }
@@ -174,7 +179,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
         // 每十五秒唤醒一次
         long second = 15 * 1000;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
-
+        mContext = this;
     }
 
 
@@ -360,7 +365,14 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Map<String, String> map = new HashMap<>();
+                List<Long> result = AppDataBaseNet.getInstance(mContext).getDao().insert(dbRecord);
+                if(result != null) {
+                    Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                }
+
+                /*Map<String, String> map = new HashMap<>();
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
@@ -387,7 +399,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
                         DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                         Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 finish();
             }
         });

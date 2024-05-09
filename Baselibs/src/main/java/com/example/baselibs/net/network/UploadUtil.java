@@ -19,9 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UploadUtil {
 
     public static String uid = "";
-    public static boolean isStart = true;
     public static MutableLiveData<Boolean> isLogin = new MutableLiveData<>(false);
-
     public static User user = new User();
 
     //锁对象

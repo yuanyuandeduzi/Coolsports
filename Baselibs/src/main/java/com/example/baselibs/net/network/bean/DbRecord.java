@@ -1,4 +1,4 @@
-package com.example.sport.db;
+package com.example.baselibs.net.network.bean;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -14,6 +14,7 @@ public class DbRecord {
     public DbRecord() {
     }
 
+    private String phone = "";
     private String distance = "";
     private String runTime = "";
     private String runWhen = "";
@@ -48,5 +49,13 @@ public class DbRecord {
 
     public void setRunWhen(String runWhen) {
         this.runWhen = runWhen;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

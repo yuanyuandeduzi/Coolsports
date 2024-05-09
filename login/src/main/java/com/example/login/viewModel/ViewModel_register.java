@@ -21,12 +21,7 @@ public class ViewModel_register extends ViewModel {
     private MutableLiveData<User> user = new MutableLiveData<>(new User());
     private final User mUser = user.getValue();
 
-    private MutableLiveData<Boolean> finish = new MutableLiveData<>(false);
     private MutableLiveData<String> password2 = new MutableLiveData<>();
-
-    public LiveData<Boolean> getFinish() {
-        return finish;
-    }
 
     public LiveData<User> getUser() {
         return user;
@@ -83,34 +78,5 @@ public class ViewModel_register extends ViewModel {
     public void setHeadUrl(String headUrl) {
         mUser.setHeadUrl(headUrl);
         user.setValue(mUser);
-    }
-
-    public void addInfo(){
-        HashMap<String,String> map = new HashMap<>();
-        map.put("age",mUser.getAge());
-        map.put("headUrl",mUser.getHeadUrl());
-        map.put("password",mUser.getPassword());
-        map.put("userName",mUser.getUserName());
-        map.put("phone",mUser.getPhone());
-        map.put("gender",mUser.getGender());
-        map.put("email",mUser.getEmail());
-        map.put("uid","");
-
-       try{
-           UploadUtil.loginPostService().login_postAddInfo("register/addInfo",map).enqueue(new Callback<BaseResponse<Boolean>>() {
-               @Override
-               public void onResponse(Call<BaseResponse<Boolean>> call, Response<BaseResponse<Boolean>> response) {
-                   assert response.body() != null;
-                   finish.setValue(response.body().getData());
-               }
-
-               @Override
-               public void onFailure(Call<BaseResponse<Boolean>> call, Throwable t) {
-
-               }
-           });
-       }catch (Exception ignored) {
-
-       }
     }
 }

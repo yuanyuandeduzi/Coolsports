@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Login</string>
-    <string name="prompt_password">验证码</string>
+    <string name="prompt_password">密码</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="action_sign_in">注册/登录</string>
+    <string name="action_sign_in">登录</string>
     <string name="user_phone">电话号</string>
 </resources>

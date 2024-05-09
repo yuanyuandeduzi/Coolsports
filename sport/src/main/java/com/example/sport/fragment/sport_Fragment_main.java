@@ -23,7 +23,11 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.R;
+import com.example.sport.db.AppDataBaseLocation;
+import com.example.sport.db.AppDataBaseNet;
+import com.example.sport.record.TargetDistance;
 import com.example.sport.ui.Sport_Activity_OutRoom;
 import com.example.sport.ui.Sport_Activity_Record;
 import com.example.sport.ui.Sport_Activity_Room;
@@ -48,6 +52,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
     private Button mButton_record;
     private Button mButton_target;
     private GradientProgressBar myProgress;
+    private Context mContext;
 
     @Nullable
     @Override
@@ -59,7 +64,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mContext = getContext();
         initControl(view);
         myProgress = view.findViewById(R.id.myProgress);
         getSportTargetAndDistance();
@@ -124,15 +129,15 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 //            if (getContext() != null && !isTrue(getContext())) {
 //                new DialogUtils().initDialog(getContext());
 //            } else {
-                Intent intent1 = new Intent(getContext(), Sport_Activity_OutRoom.class);
-                startActivity(intent1);
+            Intent intent1 = new Intent(getContext(), Sport_Activity_OutRoom.class);
+            startActivity(intent1);
 //            }
         } else if (id == R.id.run_room) {
 //            if (getContext() != null && !isTrue(getContext())) {
 //                new DialogUtils().initDialog(getContext());
 //            } else {
-                Intent intent2 = new Intent(getContext(), Sport_Activity_Room.class);
-                startActivity(intent2);
+            Intent intent2 = new Intent(getContext(), Sport_Activity_Room.class);
+            startActivity(intent2);
 //            }
         } else if (id == R.id.bt_target) {
             openDialog();
@@ -152,7 +157,9 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 
     //更新总目标
     private void updateTarget(Double d) {
-        Map<String, String> map = new HashMap<>();
+        AppDataBaseLocation.getInstance(mContext).getTargetDao().insert(new TargetDistance(d, UploadUtil.user.getPhone()));
+
+        /*Map<String, String> map = new HashMap<>();
         map.put("uid", UploadUtil.uid);
         map.put("target", "" + d);
         UploadUtil.sentPostService().sport_postCallForUpdateTarget("run/addSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
@@ -164,12 +171,22 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
             public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
 
             }
-        });
+        });*/
     }
 
     //获取总目标
     private void getSportTargetAndDistance() {
-        Map<String, String> map = new HashMap<>();
+        TargetDistance result = AppDataBaseLocation.getInstance(mContext).getTargetDao().query(UploadUtil.user.getPhone());
+        if(result != null) {
+            myProgress.setSumProgress(result.getTargetDistance());
+        }
+        List<DbRecord> queryResult = AppDataBaseNet.getInstance(mContext).getDao().query(UploadUtil.user.getPhone());
+        double sum = 0;
+        for (DbRecord dbRecord : queryResult) {
+            sum += Double.parseDouble(dbRecord.getDistance());
+        }
+        myProgress.updateProgress(sum);
+        /*      Map<String, String> map = new HashMap<>();
         map.put("uid", UploadUtil.uid);
         UploadUtil.sentPostService().sport_postCallForgetTarget("run/getSportTarget", map).enqueue(new Callback<BaseResponse<String>>() {
             @Override
@@ -199,7 +216,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
             public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
 
             }
-        });
+        });*/
 
     }
 }

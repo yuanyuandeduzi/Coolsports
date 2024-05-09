@@ -1,8 +1,17 @@
 package com.example.baselibs.net.network.bean;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "user")
 public class User {
 
-    private String phone = "";
+    @NonNull    //主键不能为null，必须添加这个注解
+    @PrimaryKey(autoGenerate = true)    //主键是否自动增长，默认为false
+    private int id;
+
+    private String phone = "123456789";
     private String password = "";
     private String userName = "";
 
@@ -74,6 +83,14 @@ public class User {
 
     public void setHeadUrl(String headUrl) {
         this.headUrl = headUrl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

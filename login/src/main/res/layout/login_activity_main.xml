@@ -31,25 +31,13 @@
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:maxLength="6"
         android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toStartOf="@+id/button_startCode"
+        app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username"
         tools:ignore="TextFields" />
 
 
-    <Button
-        android:id="@+id/button_startCode"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginEnd="10dp"
-        android:text="获取"
-        android:background="@drawable/shape_blue_bg1"
-        app:layout_constraintBottom_toBottomOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/password"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/login"
@@ -68,6 +56,19 @@
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.269" />
 
+    <Button
+        android:id="@+id/register"
+        android:layout_width="105dp"
+        android:layout_height="35dp"
+        android:layout_gravity="start"
+        android:background="@drawable/shape_blue_bg1"
+        android:enabled="false"
+        android:text="注册"
+        app:layout_constraintBottom_toTopOf="@+id/login_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login" />
+
     <TextView
         android:id="@+id/login_tv"
         android:layout_width="wrap_content"
@@ -80,6 +81,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login"
-        app:layout_constraintVertical_bias="0.048" />
+        app:layout_constraintVertical_bias="0.164" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
