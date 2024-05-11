@@ -18,18 +18,23 @@ import com.example.community.R;
 import com.example.community.adapter.Rc_Adapter_main;
 import com.example.community.bean.Data_rc;
 import com.example.community.bean.ImagePreviewLoader;
+import com.example.community.db.CommunityDataBase;
 import com.example.community.ui.community_release;
 import com.previewlibrary.ZoomMediaLoader;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import io.reactivex.internal.util.LinkedArrayList;
 
 @Route(path = "/community/community1")
 public class community_fragment_main extends Fragment {
 
     private ImageView im_1;
     private RecyclerView recyclerView;
-    private List<Data_rc> mList;
+    private final LinkedList<Data_rc> mList = new LinkedList<>();
+    private Rc_Adapter_main adapter;
 
     @Nullable
     @Override
@@ -45,6 +50,12 @@ public class community_fragment_main extends Fragment {
         initControl(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initList();
+        adapter.notifyDataSetChanged();
+    }
 
     private void initControl(View view) {
         im_1 = view.findViewById(R.id.im_1);
@@ -60,35 +71,15 @@ public class community_fragment_main extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         initList();
-        recyclerView.setAdapter(new Rc_Adapter_main(mList));
+        adapter = new Rc_Adapter_main(mList);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initList() {
-        mList = new ArrayList<>();
-        Data_rc data = new Data_rc();
-        data.setName("圆圆的肚子");
-        data.setContent("圆圆的肚子" + "\t闲来无事");
-        data.setHead("content://media/external/images/media/1000001277");
-        mList.add(data);
-        Data_rc data1 = new Data_rc();
-        data1.setName("土豆大侠");
-        data1.setContent("番薯番薯，我是土豆");
-        data1.setHead("content://media/external/images/media/1000000835");
-        mList.add(data1);
-        Data_rc data2 = new Data_rc();
-        data2.setName("一颗包子");
-        data2.setContent("包子要想好吃，还得皮包馅多");
-        data2.setHead("content://media/external/images/media/1000000833");
-        mList.add(data2);
-        Data_rc data3 = new Data_rc();
-        data3.setName("天上飞鸟");
-        data3.setContent("做一只在天上永不下落的飞鸟，直至死去！！！");
-        data3.setHead("content://media/external/images/media/1000001277");
-        mList.add(data3);
-        Data_rc data4 = new Data_rc();
-        data4.setName("挖土机");
-        data4.setContent("挖掘机技术哪家强，中国山东找蓝翔，学挖掘机技术，认准蓝翔职业技术学院。");
-        data4.setHead("content://media/external/images/media/1000001277");
-        mList.add(data4);
+        mList.clear();
+        List<Data_rc> data_rcs = CommunityDataBase.getInstance(getContext()).getDataDao().loadAll();
+        for (Data_rc data_rc : data_rcs) {
+            mList.addFirst(data_rc);
+        }
     }
 }

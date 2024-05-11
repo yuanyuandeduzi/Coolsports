@@ -1,9 +1,9 @@
 package com.example.sport.ui;
 
-import static com.example.sport.util.TimeUtil.getCurrentTime;
-import static com.example.sport.util.TimeUtil.stringToTime;
-import static com.example.sport.util.TimeUtil.timeFormat;
-import static com.example.sport.util.TimeUtil.timeToString;
+import static com.example.baselibs.TimeUtil.getCurrentTime;
+import static com.example.baselibs.TimeUtil.stringToTime;
+import static com.example.baselibs.TimeUtil.timeFormat;
+import static com.example.baselibs.TimeUtil.timeToString;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -55,12 +55,10 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
-import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.bean.DbRecord;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
-import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.db.DbManger;
-import com.example.baselibs.net.network.ApiService;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.util.PathSmoothTool;
@@ -68,13 +66,7 @@ import com.example.sport.view.MyProgressButton;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 //AMap.OnMyLocationChangeListener,
 public class Sport_Activity_OutRoom extends AppCompatActivity implements View.OnClickListener {
@@ -365,7 +357,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                List<Long> result = AppDataBaseNet.getInstance(mContext).getDao().insert(dbRecord);
+                List<Long> result = AppDataBase.getInstance(mContext).getDbRecordDao().insert(dbRecord);
                 if(result != null) {
                     Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
                 }else {

@@ -1,6 +1,7 @@
 package com.example.sport.db;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -18,4 +19,6 @@ public interface DbTargetDao {
     @Query("select * from target_distance where phone = :phone")
     TargetDistance query(String phone);
 
+    @Query("DELETE FROM target_distance where phone = :phone")
+    void delete(String phone);
 }

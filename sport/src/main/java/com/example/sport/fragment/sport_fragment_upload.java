@@ -14,22 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
 import com.example.sport.adapter.Upload_Adapter_Rc;
 import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.baselibs.net.network.UploadUtil;
-import com.example.sport.db.AppDataBaseNet;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class sport_fragment_upload extends Fragment {
 
@@ -65,7 +57,7 @@ public class sport_fragment_upload extends Fragment {
     @SuppressLint({"CheckResult", "NotifyDataSetChanged"})
     private void upload() {
 
-        List<DbRecord> result = AppDataBaseNet.getInstance(this.getContext()).getDao().query(UploadUtil.user.getPhone());
+        List<DbRecord> result = AppDataBase.getInstance(this.getContext()).getDbRecordDao().queryByPhone(UploadUtil.user.getPhone());
         if(result == null) {
             Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
         }else {

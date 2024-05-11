@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Update;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -114,7 +115,8 @@ public class User_Activity_Alter extends AppCompatActivity {
         viewBinding.btFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.updateInfo();
+                viewModel.updateInfo(getApplicationContext());
+                finish();
             }
         });
         LifecycleOwner owner = this;
@@ -154,7 +156,7 @@ public class User_Activity_Alter extends AppCompatActivity {
         if (requestCode == 23 && resultCode == RESULT_OK) {
             List<Uri> list = Matisse.obtainResult(data);
             Glide.with(this).load(list.get(0)).into(viewBinding.imHead);
-            //viewModel.setHeadUrl(list.get(0).toString());
+            viewModel.setHeadUrl(list.get(0).toString());
         }
     }
 
@@ -211,6 +213,7 @@ public class User_Activity_Alter extends AppCompatActivity {
         viewBinding.edTvEmail.setText(value.getEmail());
         viewBinding.edTvGender.setText(value.getGender());
         viewBinding.edTvName.setText(value.getUserName());
+        Glide.with(this).load(value.getHeadUrl()).into(viewBinding.imHead);
     }
 
 

@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baselibs.net.network.bean.DbRecord;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
-import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.db.DbManger;
 import com.example.sport.util.DeleteUtil;
 
@@ -126,7 +126,7 @@ public class Location_Adapter_Rc extends RecyclerView.Adapter<Location_Adapter_R
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                AppDataBaseNet.getInstance(mContext).getDao().insert(dbRecord);
+                AppDataBase.getInstance(mContext).getDbRecordDao().insert(dbRecord);
 
                 DbManger.getInstance(view.getContext()).delete(dbRecord).subscribe(new Consumer<Integer>() {
                     @Override

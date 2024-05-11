@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -25,8 +26,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.baselibs.TimeUtil;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
+import com.example.baselibs.room.baseroom.AppDataBase;
+import com.example.baselibs.room.bean.PlanSportTargetByDay;
 import com.example.coolsports.R;
 import com.example.coolsports.adapter.Plan_Fragment_Adapter_Rc1;
 import com.example.coolsports.bean.Data;
@@ -35,12 +39,10 @@ import com.example.coolsports.ui.Plan_Activity_Discern;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
 import com.example.baselibs.net.network.bean.DbRecord;
-import com.example.sport.util.TimeUtil;
 import com.example.sport.view.PickerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +62,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private TextView mTv_3;
     private Button mButton_2;
     private TextView mTv_4;
-    private TextView mTv_5; //卡路里
-    private TextView mTv_6;
-    private Button mButton_3;
+
 
     //RecyclerView1
     private RecyclerView mRecyclerView1;
@@ -87,7 +87,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private int target = 100;
     private Data data;
     private Data dataNow;
-
+    private AppDataBase appDataBase;
 
     //活动跳转
     private ActivityResultLauncher<Intent> intentActivityResultLauncher;
@@ -101,11 +101,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        appDataBase = AppDataBase.getInstance(getContext());
         mList1 = getList();
-        uploadData(data);
         dataNow = data;
         initControl(view);
-
+        uploadData(data);
         Plan_Fragment_RcUtils.getsInstance().setListener(new Plan_Fragment_RcUtils.ChangeListener() {
             @Override
             public void isInVisibility() {
@@ -127,8 +127,9 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
             @Override
             public void updateMainData(Data data) {
-                uploadData(data);
                 dataNow = data;
+                uploadData(data);
+                Toast.makeText(getContext(), "请求成功！", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -154,8 +155,35 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     }
 
     //获取计划当天的记录
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     private void uploadData(Data data) {
-        Map<String, String> map = new HashMap<>();
+        List<DbRecord> result = appDataBase.getDbRecordDao().queryByDate(data.getDayTime(), UploadUtil.user.getPhone());
+        mList2.clear();
+        mList2.addAll(result);
+        if (mList2.size() != 0) {
+            mTv_4.setVisibility(View.GONE);
+        } else {
+            mTv_4.setVisibility(View.VISIBLE);
+        }
+        upload_adapter_rc2.notifyDataSetChanged();
+
+        PlanSportTargetByDay planSportTargetByDay = appDataBase.getPlanSportTargetDao().queryByDate(data.getDayTime(), UploadUtil.user.getPhone());
+        if( planSportTargetByDay != null) {
+            mTv_3.setText("/" + planSportTargetByDay.getTarget() + "分钟");
+            myPlanProgressBar.setProgress(planSportTargetByDay.getTarget());
+        }else {
+            mTv_3.setText("/" + 30 + "分钟");
+            myPlanProgressBar.setProgress(30);
+        }
+
+        float sum = 0f;
+        for (DbRecord dbRecord : result) {
+            sum += Float.parseFloat(dbRecord.getRunTime());
+        }
+        myPlanProgressBar.setCurrentProgress(sum);
+        mTv_2.setText((int) sum + "");
+
+/*        Map<String, String> map = new HashMap<>();
         //uid
         map.put("uid", UploadUtil.uid);
         map.put("day", data.getDayTime());
@@ -218,13 +246,13 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
 
             }
-        });
+        });*/
 
     }
 
     //设置今日目标
     private void updateTarget(int target) {
-        UploadUtil util = new UploadUtil();
+        /*UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
         map.put("uid", UploadUtil.uid);
         map.put("day", dataNow.getDayTime());
@@ -239,7 +267,13 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
 
             }
-        });
+        });*/
+        PlanSportTargetByDay sportTarget = new PlanSportTargetByDay();
+        sportTarget.setTarget(target);
+        sportTarget.setTargetWhen(dataNow.getDayTime());
+        sportTarget.setPhone(UploadUtil.user.getPhone());
+        appDataBase.getPlanSportTargetDao().delete(dataNow.getDayTime(), UploadUtil.user.getPhone());
+        appDataBase.getPlanSportTargetDao().insert(sportTarget);
     }
 
 
@@ -278,11 +312,6 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             }
         });
 
-        mTv_5 = view.findViewById(R.id.plan_tv_done);
-        mTv_6 = view.findViewById(R.id.plan_tv_advise);
-        mButton_3 = view.findViewById(R.id.plan_bt_discern);
-        mButton_3.setOnClickListener(this);
-
         mTv_2 = view.findViewById(R.id.tv_current);
         mTv_3 = view.findViewById(R.id.tv_sum);
         mTv_4 = view.findViewById(R.id.tv_4);
@@ -317,10 +346,6 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             uploadData(data);
         } else if (view.getId() == R.id.bt_plan_target) {
             openDialog();
-        } else if (view.getId() == R.id.plan_bt_discern) {
-
-            Intent intent = new Intent(getContext(), Plan_Activity_Discern.class);
-            intentActivityResultLauncher.launch(intent);
         }
     }
 

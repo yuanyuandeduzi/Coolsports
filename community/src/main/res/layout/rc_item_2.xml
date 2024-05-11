@@ -10,6 +10,7 @@
         android:layout_height="35dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/community_p_3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"

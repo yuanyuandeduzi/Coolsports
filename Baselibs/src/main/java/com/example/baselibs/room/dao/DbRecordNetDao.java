@@ -1,10 +1,9 @@
-package com.example.sport.db;
+package com.example.baselibs.room.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
 
 import com.example.baselibs.net.network.bean.DbRecord;
 
@@ -17,6 +16,9 @@ public interface DbRecordNetDao {
     List<Long> insert(DbRecord... records);
 
     @Query("select * from dbRecord where phone = :phone")
-    List<DbRecord> query(String phone);
+    List<DbRecord> queryByPhone(String phone);
+
+    @Query("select * from dbRecord where runWhenToDay = :runWhenToDay and phone = :phone")
+    List<DbRecord> queryByDate(String runWhenToDay, String phone);
 
 }

@@ -1,5 +1,6 @@
 package com.example.coolsports;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -9,6 +10,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.baselibs.net.network.bean.User;
+import com.example.baselibs.room.baseroom.AppDataBase;
+import com.example.baselibs.room.baseroom.UserDataBase;
 import com.example.login.viewModel.ViewModel_register;
 
 import org.greenrobot.eventbus.EventBus;
@@ -96,8 +99,10 @@ public class ViewModel_activity_user extends ViewModel {
     }
 
 
-    public void updateInfo() {
-        HashMap<String, String> map = new HashMap<>();
+    public void updateInfo(Context context) {
+        EventBus.getDefault().postSticky(mUser);
+        UserDataBase.getInstance(context).getUserDao().update(mUser);
+       /* HashMap<String, String> map = new HashMap<>();
         map.put("age", mUser.getAge());
         map.put("headUrl", mUser.getHeadUrl());
         map.put("password", mUser.getPassword());
@@ -128,7 +133,7 @@ public class ViewModel_activity_user extends ViewModel {
 
         } catch (Exception ignored) {
 
-        }
+        }*/
 
     }
 }

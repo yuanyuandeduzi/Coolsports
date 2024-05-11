@@ -1,8 +1,14 @@
 package com.example.baselibs.net.network.bean;
 
+import android.icu.util.TimeUnit;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.example.baselibs.TimeUtil;
+
+import java.util.Date;
 
 @Entity(tableName = "dbRecord")
 public class DbRecord {
@@ -18,6 +24,7 @@ public class DbRecord {
     private String distance = "";
     private String runTime = "";
     private String runWhen = "";
+    private String runWhenToDay = "";
 
     public int getId() {
         return id;
@@ -48,6 +55,7 @@ public class DbRecord {
     }
 
     public void setRunWhen(String runWhen) {
+        this.runWhenToDay = runWhen.split(" ")[0];
         this.runWhen = runWhen;
     }
 
@@ -57,5 +65,13 @@ public class DbRecord {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getRunWhenToDay() {
+        return runWhenToDay;
+    }
+
+    public void setRunWhenToDay(String runWhenToDay) {
+        this.runWhenToDay = runWhenToDay;
     }
 }

@@ -21,28 +21,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.baselibs.net.network.bean.DbRecord;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
 import com.example.sport.db.AppDataBaseLocation;
-import com.example.sport.db.AppDataBaseNet;
 import com.example.sport.record.TargetDistance;
 import com.example.sport.ui.Sport_Activity_OutRoom;
 import com.example.sport.ui.Sport_Activity_Record;
 import com.example.sport.ui.Sport_Activity_Room;
-import com.example.sport.util.DialogUtils;
 import com.example.sport.view.GradientProgressBar;
 import com.example.sport.view.PickerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @Route(path = "/sport/sport1")
 public class sport_Fragment_main extends Fragment implements View.OnClickListener {
@@ -157,7 +149,9 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
 
     //更新总目标
     private void updateTarget(Double d) {
-        AppDataBaseLocation.getInstance(mContext).getTargetDao().insert(new TargetDistance(d, UploadUtil.user.getPhone()));
+        AppDataBaseLocation instance = AppDataBaseLocation.getInstance(mContext);
+        instance.getTargetDao().delete(UploadUtil.user.getPhone());
+        instance.getTargetDao().insert(new TargetDistance(d, UploadUtil.user.getPhone()));
 
         /*Map<String, String> map = new HashMap<>();
         map.put("uid", UploadUtil.uid);
@@ -180,7 +174,7 @@ public class sport_Fragment_main extends Fragment implements View.OnClickListene
         if(result != null) {
             myProgress.setSumProgress(result.getTargetDistance());
         }
-        List<DbRecord> queryResult = AppDataBaseNet.getInstance(mContext).getDao().query(UploadUtil.user.getPhone());
+        List<DbRecord> queryResult = AppDataBase.getInstance(mContext).getDbRecordDao().queryByPhone(UploadUtil.user.getPhone());
         double sum = 0;
         for (DbRecord dbRecord : queryResult) {
             sum += Double.parseDouble(dbRecord.getDistance());

@@ -1,6 +1,5 @@
 package com.example.coolsports.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,17 +9,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.android.arouter.BuildConfig;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.bumptech.glide.Glide;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.baselibs.net.network.bean.User;
 import com.example.coolsports.databinding.AppFragmentUserBinding;
 import com.example.coolsports.ui.App_MainActivity;
-import com.example.coolsports.ui.User_Activity_Alter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,15 +50,14 @@ public class app_fragment_user extends Fragment {
                 }
             }
         });
-
-        viewBinding.reLogin.setOnClickListener(new View.OnClickListener() {
+           viewBinding.reLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ARouter.getInstance().build("/login/login1").navigation();
             }
         });
 
-        initMenu(UploadUtil.user);
+        initContent(UploadUtil.user);
 
         viewBinding.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +72,15 @@ public class app_fragment_user extends Fragment {
 
     }
 
-    private void initMenu(User user) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        initContent(UploadUtil.user);
+    }
+
+    private void initContent(User user) {
+        viewBinding.userName.setText(user.getUserName());
+        Glide.with(this).load(user.getHeadUrl()).into(viewBinding.userPortrait);
         Menu menu = viewBinding.myNavigation.getMenu();
         if(user != null) {
             menu.getItem(0).setTitle("用户：" + user.getUserName());

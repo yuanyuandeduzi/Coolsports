@@ -28,11 +28,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.baselibs.net.network.UploadUtil;
 import com.example.community.R;
 import com.example.community.adapter.Rc_Adapter_release;
 import com.example.community.bean.Data_rc;
 import com.example.community.bean.ImagePreviewLoader;
 import com.example.community.db.AppDatabase;
+import com.example.community.db.CommunityDataBase;
 import com.previewlibrary.ZoomMediaLoader;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -98,7 +100,19 @@ public class community_release extends AppCompatActivity {
         mButton_release.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                data = new Data_rc();
+                data.setList(mList);
+                data.setHead(UploadUtil.user.getHeadUrl());
+                data.setContent(mEditText.getText().toString());
+                data.setName(UploadUtil.user.getUserName());
+                CommunityDataBase.getInstance(getApplicationContext()).getDataDao().insert(data);
+                AppDatabase.getInstance(getApplicationContext()).getDataDao().deleteAll();
+                mEditText.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                },100);
             }
         });
 

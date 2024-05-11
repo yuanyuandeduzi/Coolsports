@@ -9,16 +9,16 @@ import androidx.room.RoomDatabase;
 import com.example.community.bean.Data_rc;
 
 @Database(entities = {Data_rc.class},version = 1,exportSchema = false)
-public abstract  class AppDatabase extends RoomDatabase {
+public abstract class CommunityDataBase  extends RoomDatabase {
 
-    private static AppDatabase sInstance;
+    private static CommunityDataBase sInstance;
 
-    public static AppDatabase getInstance(Context context) {
+    public static CommunityDataBase getInstance(Context context) {
         if(sInstance == null) {
-            synchronized (AppDatabase.class) {
+            synchronized (CommunityDataBase.class) {
                 if(sInstance == null) {
-                    sInstance = Room.databaseBuilder(context,AppDatabase.class,"data_community").
-                    allowMainThreadQueries().build();
+                    sInstance = Room.databaseBuilder(context,CommunityDataBase.class,"data_community_upload").
+                            allowMainThreadQueries().build();
                 }
             }
         }
@@ -26,5 +26,4 @@ public abstract  class AppDatabase extends RoomDatabase {
     }
 
     public abstract DataDao getDataDao();
-
 }

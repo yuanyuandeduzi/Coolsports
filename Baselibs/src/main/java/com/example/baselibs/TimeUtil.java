@@ -1,16 +1,9 @@
-package com.example.sport.util;
+package com.example.baselibs;
 
 import android.annotation.SuppressLint;
 import android.os.SystemClock;
-import android.provider.ContactsContract;
 import android.widget.Chronometer;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
