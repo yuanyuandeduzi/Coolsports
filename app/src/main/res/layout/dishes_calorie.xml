@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:padding="25dp">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="牛奶"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/tv_calorie"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_calorie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100千卡/100克"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+    <com.example.baselibs.MyView.MyEditText
+        android:id="@+id/ed_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="1"
+        android:textColor="@color/text_color_3"
+        android:textSize="18sp"
+        android:digits="1234567890"
+        android:singleLine="true"
+        android:inputType="number"
+        android:maxLength="4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="克"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ed_num"
+        app:layout_constraintStart_toEndOf="@+id/ed_num"
+        app:layout_constraintTop_toTopOf="@+id/ed_num" />
+
+    <Button
+        android:id="@+id/bt_confirm"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bt_bg_green"
+        android:text="确认"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_num" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

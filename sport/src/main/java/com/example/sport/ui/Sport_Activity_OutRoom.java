@@ -543,7 +543,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
                 if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(Sport_Activity_OutRoom.this, "", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Sport_Activity_OutRoom.this, "开启权限使用完整功能", Toast.LENGTH_SHORT).show();
                             finish();
                             return;
                         }

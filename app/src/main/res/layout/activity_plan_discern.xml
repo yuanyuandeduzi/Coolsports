@@ -81,8 +81,18 @@
         android:layout_height="wrap_content"
         android:text="识别"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/plan_bt_discern_4"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_plan_discern_3" />
+
+    <Button
+        android:id="@+id/plan_bt_discern_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加"
+        app:layout_constraintBottom_toBottomOf="@+id/plan_bt_discern_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/plan_bt_discern_1"
+        app:layout_constraintTop_toTopOf="@+id/plan_bt_discern_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

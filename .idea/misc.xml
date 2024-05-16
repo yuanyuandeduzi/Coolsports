@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android_SDK/platforms/android-32/data/res/drawable/ic_media_route_dark_material.xml" value="0.27" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/bt_bg_green.xml" value="0.2605" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/button_bg.xml" value="0.21518987341772153" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/color_bottom.xml" value="0.21476793248945147" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/drawable/ic_launcher_background.xml" value="0.164" />
@@ -12,12 +13,15 @@
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_app_first.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_plan_discern.xml" value="0.2" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_plan_dishes.xml" value="0.28547008547008546" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/activity_user_alter.xml" value="0.297008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_community.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_myself.xml" value="0.2047008547008547" />
-        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_plan.xml" value="0.33" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_plan.xml" value="0.2818565400843882" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/app_fragment_user.xml" value="0.33" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/dishes_calorie.xml" value="0.2846153846153846" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/fragment_user.xml" value="0.29615384615384616" />
+        <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/item_dishes.xml" value="0.2846153846153846" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/plan_dialog_item.xml" value="0.2047008547008547" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/layout/plan_item_rc.xml" value="0.4" />
         <entry key="..\:/Android_file/Coolsports/app/src/main/res/menu/my_menu.xml" value="0.29615384615384616" />

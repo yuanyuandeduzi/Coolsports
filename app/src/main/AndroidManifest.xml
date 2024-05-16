@@ -17,9 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Coolsports">
         <activity
+            android:name=".ui.Plan_Activity_dishes"
+            android:exported="false" />
+        <activity
             android:name=".ui.User_Activity_Alter"
-            android:exported="true" >
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".ui.App_FirstActivity"
             android:exported="true">

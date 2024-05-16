@@ -21,21 +21,22 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.baselibs.TimeUtil;
-import com.example.baselibs.net.BaseResponse;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.baselibs.room.baseroom.AppDataBase;
+import com.example.baselibs.room.bean.PlanCalorieTargetByDay;
 import com.example.baselibs.room.bean.PlanSportTargetByDay;
 import com.example.coolsports.R;
 import com.example.coolsports.adapter.Plan_Fragment_Adapter_Rc1;
 import com.example.coolsports.bean.Data;
 import com.example.coolsports.myView.MyPlanProgressBar;
-import com.example.coolsports.ui.Plan_Activity_Discern;
 import com.example.coolsports.util.Plan_Fragment_RcUtils;
 import com.example.sport.adapter.Upload_Adapter_Rc;
 import com.example.baselibs.net.network.bean.DbRecord;
@@ -43,13 +44,7 @@ import com.example.sport.view.PickerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @Route(path = "/plan/plan1")
 public class app_fragment_plan extends Fragment implements View.OnClickListener {
@@ -57,12 +52,19 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     //控件
     private TextView mTv_1;
     private Button mButton_1;
-    private MyPlanProgressBar myPlanProgressBar;
+    private MyPlanProgressBar sportProgressBar;
     private TextView mTv_2;
-    private TextView mTv_3;
+    private TextView mSport_time;
     private Button mButton_2;
     private TextView mTv_4;
+    private Button mButton_calorie;
 
+
+    private TextView mCalorie_num;
+    private TextView mCalorie_target;
+    private MyPlanProgressBar calorieProgress;
+
+    private ConstraintLayout calorie_layout;
 
     //RecyclerView1
     private RecyclerView mRecyclerView1;
@@ -83,11 +85,14 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     private LinearLayoutManager linearLayoutManager2;
     private Upload_Adapter_Rc upload_adapter_rc2;
 
-    //记录
-    private int target = 100;
+    //记录运动目标
+    private int sportTarget = 100;
     private Data data;
     private Data dataNow;
     private AppDataBase appDataBase;
+
+    //记录饮食目标
+    private int calorieTarget = 1500;
 
     //活动跳转
     private ActivityResultLauncher<Intent> intentActivityResultLauncher;
@@ -120,8 +125,10 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
                 mTv_1.setText(data.getDayAndMonth());
                 if (position < 30) {
                     mButton_2.setVisibility(View.INVISIBLE);
+                    mButton_calorie.setVisibility(View.INVISIBLE);
                 } else {
                     mButton_2.setVisibility(View.VISIBLE);
+                    mButton_calorie.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -154,6 +161,12 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        uploadData(dataNow);
+    }
+
     //获取计划当天的记录
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     private void uploadData(Data data) {
@@ -168,21 +181,33 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         upload_adapter_rc2.notifyDataSetChanged();
 
         PlanSportTargetByDay planSportTargetByDay = appDataBase.getPlanSportTargetDao().queryByDate(data.getDayTime(), UploadUtil.user.getPhone());
-        if( planSportTargetByDay != null) {
-            mTv_3.setText("/" + planSportTargetByDay.getTarget() + "分钟");
-            myPlanProgressBar.setProgress(planSportTargetByDay.getTarget());
-        }else {
-            mTv_3.setText("/" + 30 + "分钟");
-            myPlanProgressBar.setProgress(30);
+        if (planSportTargetByDay != null) {
+            mSport_time.setText("/" + planSportTargetByDay.getTarget() + "分钟");
+            sportProgressBar.setProgress(planSportTargetByDay.getTarget());
+        } else {
+            mSport_time.setText("/" + 30 + "分钟");
+            sportProgressBar.setProgress(30);
         }
 
         float sum = 0f;
         for (DbRecord dbRecord : result) {
             sum += Float.parseFloat(dbRecord.getRunTime());
         }
-        myPlanProgressBar.setCurrentProgress(sum);
+        sportProgressBar.setCurrentProgress(sum);
         mTv_2.setText((int) sum + "");
 
+        PlanCalorieTargetByDay planCalorieTargetByDay = appDataBase.getPlanCalorieTargetDao().queryByDate(data.getDayTime(), UploadUtil.user.getPhone());
+        if (planCalorieTargetByDay != null) {
+            mCalorie_num.setText(planCalorieTargetByDay.getNowInput() + "");
+            mCalorie_target.setText("/" + planCalorieTargetByDay.getTarget() + "千卡");
+            calorieProgress.setCurrentProgress(planCalorieTargetByDay.getNowInput());
+            calorieProgress.setProgress(planCalorieTargetByDay.getTarget());
+        } else {
+            mCalorie_num.setText("0");
+            mCalorie_target.setText("/1500千卡");
+            calorieProgress.setProgress(30);
+            calorieProgress.setCurrentProgress(0);
+        }
 /*        Map<String, String> map = new HashMap<>();
         //uid
         map.put("uid", UploadUtil.uid);
@@ -251,7 +276,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     }
 
     //设置今日目标
-    private void updateTarget(int target) {
+    private void updateSportTarget(int target) {
         /*UploadUtil util = new UploadUtil();
         Map<String, String> map = new HashMap<>();
         map.put("uid", UploadUtil.uid);
@@ -274,6 +299,19 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         sportTarget.setPhone(UploadUtil.user.getPhone());
         appDataBase.getPlanSportTargetDao().delete(dataNow.getDayTime(), UploadUtil.user.getPhone());
         appDataBase.getPlanSportTargetDao().insert(sportTarget);
+    }
+
+    private void updateCalorieTarget(int target) {
+        PlanCalorieTargetByDay calorieTarget = new PlanCalorieTargetByDay();
+        calorieTarget.setTarget(target);
+        calorieTarget.setTargetWhen(dataNow.getDayTime());
+        calorieTarget.setPhone(UploadUtil.user.getPhone());
+        PlanCalorieTargetByDay planSportTargetByDay = appDataBase.getPlanCalorieTargetDao().queryByDate(dataNow.getDayTime(), UploadUtil.user.getPhone());
+        if (planSportTargetByDay != null) {
+            calorieTarget.setNowInput(planSportTargetByDay.getNowInput());
+        }
+        appDataBase.getPlanCalorieTargetDao().delete(dataNow.getDayTime(), UploadUtil.user.getPhone());
+        appDataBase.getPlanCalorieTargetDao().insert(calorieTarget);
     }
 
 
@@ -313,9 +351,9 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         });
 
         mTv_2 = view.findViewById(R.id.tv_current);
-        mTv_3 = view.findViewById(R.id.tv_sum);
+        mSport_time = view.findViewById(R.id.tv_sum);
         mTv_4 = view.findViewById(R.id.tv_4);
-        myPlanProgressBar = view.findViewById(R.id.myProgressBar);
+        sportProgressBar = view.findViewById(R.id.myProgressBar);
         mRecyclerView2 = view.findViewById(R.id.plan_fragment_rc2);
         linearLayoutManager2 = new LinearLayoutManager(getContext());
         linearLayoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
@@ -327,6 +365,26 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
         mButton_2 = view.findViewById(R.id.bt_plan_target);
         mButton_2.setOnClickListener(this);
 
+        calorie_layout = view.findViewById(R.id.location_plan_ka);
+        calorie_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ARouter.getInstance().build("/plan/dishes")
+                        .withString("date", dataNow.getDayTime()).navigation();
+            }
+        });
+
+        mCalorie_num = view.findViewById(R.id.tv_ka_current);
+        mCalorie_target = view.findViewById(R.id.tv_ka_sum);
+        calorieProgress = view.findViewById(R.id.myProgressBar_ka);
+        calorieProgress.setProgress(30);
+        mButton_calorie = view.findViewById(R.id.bt_plan_ka_target);
+        mButton_calorie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCalorieDialog();
+            }
+        });
     }
 
     @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
@@ -342,10 +400,11 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             mTv_1.setText("今日");
             mButton_1.setVisibility(View.INVISIBLE);
             mButton_2.setVisibility(View.VISIBLE);
+            mButton_calorie.setVisibility(View.VISIBLE);
             dataNow = data;
             uploadData(data);
         } else if (view.getId() == R.id.bt_plan_target) {
-            openDialog();
+            openSportDialog();
         }
     }
 
@@ -365,7 +424,7 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
     }
 
     //调整目标
-    private void openDialog() {
+    private void openSportDialog() {
         Dialog dialog = new Dialog(getContext(), com.example.sport.R.style.MyDialog);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.plan_dialog_item, null);
         Button bt = view.findViewById(R.id.button_1);
@@ -379,16 +438,56 @@ public class app_fragment_plan extends Fragment implements View.OnClickListener 
             @Override
             public void onSelect(String text) {
                 String s = text.substring(0, text.length() - 2);
-                target = Integer.parseInt(s);
+                sportTarget = Integer.parseInt(s);
             }
         });
         bt.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                mTv_3.setText("/" + target + "分钟");
-                updateTarget(target);
-                myPlanProgressBar.setProgress(target);
+                mSport_time.setText("/" + sportTarget + "分钟");
+                updateSportTarget(sportTarget);
+                sportProgressBar.setProgress(sportTarget);
+                dialog.cancel();
+            }
+        });
+
+        dialog.setContentView(view);
+        //设置dialog位置
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.y = 20;
+        window.setAttributes(attributes);
+        dialog.show();
+
+    }
+
+    //调整卡路里目标
+    private void openCalorieDialog() {
+        Dialog dialog = new Dialog(getContext(), com.example.sport.R.style.MyDialog);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.plan_dialog_item, null);
+        Button bt = view.findViewById(R.id.button_1);
+        PickerView pickerView = view.findViewById(com.example.sport.R.id.pickerView);
+        List<String> data = new ArrayList<>();
+        for (int i = 1500; i < 3000; i += 200) {
+            data.add(i + "千卡");
+        }
+        pickerView.setData(data);
+        pickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                String s = text.substring(0, text.length() - 2);
+                calorieTarget = Integer.parseInt(s);
+            }
+        });
+        bt.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+                updateCalorieTarget(calorieTarget);
+                mCalorie_target.setText("/" + calorieTarget + "千卡");
+                calorieProgress.setProgress(calorieTarget);
                 dialog.cancel();
             }
         });
