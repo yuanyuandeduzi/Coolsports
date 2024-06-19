@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,17 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.baselibs.net.network.bean.DbRecord;
 import com.example.sport.R;
 import com.example.sport.adapter.Location_Adapter_Rc;
-import com.example.sport.db.AppDataBase;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
-import com.example.sport.util.DeleteUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
 public class sport_fragment_location extends Fragment{
@@ -70,11 +64,11 @@ public class sport_fragment_location extends Fragment{
         tv_noRecord = view.findViewById(R.id.tv_fragment_location);
 
         recyclerView = view.findViewById(R.id.rv_fragment_location);
-        location_adapter_rc = new Location_Adapter_Rc(mList);
+        recyclerView.setItemViewCacheSize(20);
+        location_adapter_rc = new Location_Adapter_Rc(mList, this.getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(location_adapter_rc);
     }
-
 }

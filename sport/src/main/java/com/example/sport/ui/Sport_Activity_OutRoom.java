@@ -1,9 +1,9 @@
 package com.example.sport.ui;
 
-import static com.example.sport.util.TimeUtil.getCurrentTime;
-import static com.example.sport.util.TimeUtil.stringToTime;
-import static com.example.sport.util.TimeUtil.timeFormat;
-import static com.example.sport.util.TimeUtil.timeToString;
+import static com.example.baselibs.TimeUtil.getCurrentTime;
+import static com.example.baselibs.TimeUtil.stringToTime;
+import static com.example.baselibs.TimeUtil.timeFormat;
+import static com.example.baselibs.TimeUtil.timeToString;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,12 +20,14 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -41,7 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
@@ -54,11 +55,10 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
-import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.bean.DbRecord;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
-import com.example.baselibs.net.network.ApiService;
 import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.util.PathSmoothTool;
@@ -66,15 +66,10 @@ import com.example.sport.view.MyProgressButton;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 //AMap.OnMyLocationChangeListener,
-public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.OnClickListener {
+public class Sport_Activity_OutRoom extends AppCompatActivity implements View.OnClickListener {
 
     //地图种的类
     protected static MapView mapView;
@@ -84,7 +79,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private PathSmoothTool pathSmoothTool;  //轨迹平滑处理类
     private LocationSource.OnLocationChangedListener mListener = null;
     private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
 
     //记录
     private PathRecord pathRecord;
@@ -106,6 +100,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     private MyProgressButton myProgressButton;
 
     private LocationService.myBind locationBinder;
+    private Context mContext;
+
 
     @SuppressLint({"ShortAlarm", "InvalidWakeLockTag"})
     @Override
@@ -116,7 +112,12 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         //地图显示
         MapsInitializer.updatePrivacyShow(this, true, true);
@@ -149,6 +150,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
                 dbRecord.setRunTime(format1);
                 dbRecord.setRunWhen(getCurrentTime());
                 dbRecord.setDistance(format);
+                dbRecord.setPhone(UploadUtil.user.getPhone());
 
                 initDialog();
             }
@@ -159,17 +161,17 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             }
         });
 
-        Intent bindIntent = new Intent(this,LocationService.class);
+        Intent bindIntent = new Intent(this, LocationService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
         //创建Alarm并启动
         Intent intent = new Intent("LOCATION_CLOCK");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-// 每十五秒唤醒一次
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        // 每十五秒唤醒一次
         long second = 15 * 1000;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), second, pendingIntent);
-
+        mContext = this;
     }
 
 
@@ -188,7 +190,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     @Override
     protected void onDestroy() {
         mapView.onDestroy();
-        if(locationBinder != null) {
+        if (locationBinder != null) {
             unbindService(connection);
         }
         super.onDestroy();
@@ -355,13 +357,20 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Map<String, String> map = new HashMap<>();
+                List<Long> result = AppDataBase.getInstance(mContext).getDbRecordDao().insert(dbRecord);
+                if(result != null) {
+                    Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                }
+
+                /*Map<String, String> map = new HashMap<>();
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
-                map.put("uid", "1");
-                UploadUtil util = new UploadUtil();
-                ApiService postService = util.getPostService();
+                //uid
+                map.put("uid", UploadUtil.uid);
+                ApiService postService = UploadUtil.sentPostService();
                 postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
@@ -382,7 +391,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
                         DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                         Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 finish();
             }
         });
@@ -402,8 +411,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
     //初始化地图
     private void setUpMap() {
 
+        //添加定位监听
         aMap.setLocationSource(locationSource);
-
 
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -417,9 +426,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
-        //位置监听
-        //aMap.setOnMyLocationChangeListener(this);
-
         //设置缩放比例
         aMap.setMinZoomLevel(16);
         aMap.setMaxZoomLevel(18);
@@ -428,7 +434,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
         uiSettings.setZoomControlsEnabled(false);
     }
 
-    private LocationSource locationSource = new LocationSource() {
+    private final LocationSource locationSource = new LocationSource() {
         @Override
         public void activate(OnLocationChangedListener onLocationChangedListener) {
             mListener = onLocationChangedListener;
@@ -497,7 +503,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
 
 
     //服务
-    private ServiceConnection connection = new ServiceConnection() {	//创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
+    private ServiceConnection connection = new ServiceConnection() {    //创建一个ServiceConnection匿名类对象，重写其两个方法，一个为建里链接时执行，一个为接触链接时执行
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             locationBinder = (LocationService.myBind) iBinder;
@@ -534,7 +540,7 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements  View.O
                 if (grantResults.length > 0) {
                     for (int grantResult : grantResults) {
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(Sport_Activity_OutRoom.this, "", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Sport_Activity_OutRoom.this, "开启权限使用完整功能", Toast.LENGTH_SHORT).show();
                             finish();
                             return;
                         }

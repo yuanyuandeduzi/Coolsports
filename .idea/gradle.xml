@@ -5,18 +5,22 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../gradle-7.2-bin/gradle-7.2" />
+        <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Baselibs" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/community" />
             <option value="$PROJECT_DIR$/login" />
+            <option value="$PROJECT_DIR$/plan" />
             <option value="$PROJECT_DIR$/sport" />
+            <option value="$PROJECT_DIR$/user" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

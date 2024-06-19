@@ -1,8 +1,9 @@
 package com.example.sport.ui;
 
-import static com.example.sport.util.TimeUtil.getCurrentTime;
-import static com.example.sport.util.TimeUtil.stringToTime;
-import static com.example.sport.util.TimeUtil.timeToString;
+
+import static com.example.baselibs.TimeUtil.getCurrentTime;
+import static com.example.baselibs.TimeUtil.stringToTime;
+import static com.example.baselibs.TimeUtil.timeToString;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -41,25 +42,18 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baselibs.net.BaseResponse;
+import com.example.baselibs.net.network.UploadUtil;
+import com.example.baselibs.net.network.bean.DbRecord;
+import com.example.baselibs.room.baseroom.AppDataBase;
 import com.example.sport.R;
 import com.example.sport.db.DbManger;
-import com.example.sport.db.DbRecord;
-import com.example.baselibs.net.network.ApiService;
-import com.example.baselibs.net.network.UploadUtil;
 import com.example.sport.record.PathRecord;
 import com.example.sport.view.MyProgressButton;
 import com.example.sport.view.PickerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Sport_Activity_Room extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 
@@ -84,6 +78,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
     private int stepStart = 0;
     private PathRecord pathRecord = new PathRecord();
     private DbRecord dbRecord;
+    private Context mContext;
 
     //对象
     private SensorManager sensorManager;
@@ -97,7 +92,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
         //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
         initControl();
 
@@ -119,7 +114,6 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
             public void isFinish() {
                 pathRecord.setDuration(stringToTime(ch_time.getText().toString()));
                 pathRecord.setSteps(Integer.parseInt(tv_1.getText().toString()));
-                Log.d("TAG", "isFinish: " + pathRecord.getSteps());
                 pathRecord.setDistance(pathRecord.getStride() * pathRecord.getSteps() / 100000f);
 
                 dbRecord = new DbRecord();
@@ -128,9 +122,11 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
                 DecimalFormat decimalFormat1 = new DecimalFormat("0.0");
                 String format1 = decimalFormat1.format(pathRecord.getDuration());
 
+
                 dbRecord.setRunTime(format1);
                 dbRecord.setRunWhen(getCurrentTime());
                 dbRecord.setDistance(format);
+                dbRecord.setPhone(UploadUtil.user.getPhone());
 
                 initDialog();
             }
@@ -143,6 +139,8 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        mContext = this;
     }
 
     @Override
@@ -244,13 +242,20 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
             @SuppressLint("CheckResult")
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Map<String, String> map = new HashMap<>();
+                List<Long> result = AppDataBase.getInstance(mContext).getDbRecordDao().insert(dbRecord);
+                if(result != null) {
+                    Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                }
+
+            /* Map<String, String> map = new HashMap<>();
                 map.put("runTime", dbRecord.getRunTime());
                 map.put("runWhen", dbRecord.getRunWhen());
                 map.put("distance", dbRecord.getDistance());
-                map.put("uid", "1");
-                UploadUtil util = new UploadUtil();
-                ApiService postService = util.getPostService();
+                //uid
+                map.put("uid", UploadUtil.uid);
+                ApiService postService = UploadUtil.sentPostService();
                 postService.sport_postCall("run/addRunRecord", map).enqueue(new Callback<BaseResponse<String>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
@@ -271,7 +276,7 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
                         DbManger.getInstance(getApplicationContext()).insert(dbRecord).subscribe();
                         Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
                 finish();
             }
         });
@@ -285,18 +290,21 @@ public class Sport_Activity_Room extends AppCompatActivity implements SensorEven
         View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_item, null);
         PickerView pickerView = inflate.findViewById(R.id.pickerView);
         List<String> data = new ArrayList<>();
-        for (int i = 60; i < 90; i++) {
+        for (int i = 130; i < 200; i++) {
             data.add(i + "cm");
         }
         pickerView.setData(data);
         pickerView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
-                String s = text.substring(0, text.length() - 2);
-                pathRecord.setStride(Float.parseFloat(s));
-                tv_length.setText("步幅：" + text);
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                float f =  Float.parseFloat(text.substring(0, text.length() - 2)) * 0.4f;
+                pathRecord.setStride(f);
+                tv_length.setText("步幅：" + (int)f + "cm");
             }
         });
+        Button button = inflate.findViewById(R.id.button_1);
+        button.setVisibility(View.GONE);
         dialog.setContentView(inflate);
         //设置dialog位置
         Window window = dialog.getWindow();

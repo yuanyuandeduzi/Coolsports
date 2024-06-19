@@ -61,6 +61,23 @@ public class GradientProgressBar extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthMeasureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthMeasureSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMeasureSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightMeasureSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        float length = (mRadius + mKdLength) * 2;
+        if(heightMeasureSpecMode == MeasureSpec.AT_MOST && widthMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int)length,(int)length);
+        }else if(heightMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(widthMeasureSpecSize,(int)length);
+        }else if(widthMeasureSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int) length, heightMeasureSpecSize);
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mXCenter = getWidth() / 2;
@@ -95,6 +112,11 @@ public class GradientProgressBar extends View {
         }
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+    }
+
     //初始化画笔
     @SuppressLint("ResourceAsColor")
     private void initPaint() {
@@ -120,7 +142,7 @@ public class GradientProgressBar extends View {
 
         mBound2 = new Rect();
         mTextPaint2 = new Paint();
-        mTextPaint2.setColor(R.color.text_color_3);
+        mTextPaint2.setColor(getResources().getColor(R.color.text_color_3));
         mTextPaint2.setTextSize(50);
         mTextPaint2.setAntiAlias(true);
         mTextPaint2.setDither(true);
