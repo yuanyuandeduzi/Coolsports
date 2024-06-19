@@ -411,8 +411,8 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
     //初始化地图
     private void setUpMap() {
 
+        //添加定位监听
         aMap.setLocationSource(locationSource);
-
 
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -425,9 +425,6 @@ public class Sport_Activity_OutRoom extends AppCompatActivity implements View.On
         myLocationStyle.showMyLocation(true);//设置是否显示蓝点
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-
-        //位置监听
-        //aMap.setOnMyLocationChangeListener(this);
 
         //设置缩放比例
         aMap.setMinZoomLevel(16);

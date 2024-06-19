@@ -16,7 +16,9 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/community" />
             <option value="$PROJECT_DIR$/login" />
+            <option value="$PROJECT_DIR$/plan" />
             <option value="$PROJECT_DIR$/sport" />
+            <option value="$PROJECT_DIR$/user" />
           </set>
         </option>
       </GradleProjectSettings>

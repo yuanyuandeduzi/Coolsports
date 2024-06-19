@@ -53,6 +53,7 @@ public class LocationService extends Service {
     }
 
 
+    //开始定位
     private void startLocation() {
         if (mLocationClient == null) {
             try {

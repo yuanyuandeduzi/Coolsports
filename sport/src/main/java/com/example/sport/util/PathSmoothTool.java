@@ -48,7 +48,6 @@ public class PathSmoothTool {
 
     /**
      * 轨迹平滑优化
-     *
      * @param originlist 原始轨迹list,list.size大于2
      * @return 优化后轨迹list
      */
@@ -57,11 +56,26 @@ public class PathSmoothTool {
         List<LatLng> list = removeNoisePoint(originlist);//去噪
         List<LatLng> afterList = kalmanFilterPath(list, mIntensity);//滤波
         List<LatLng> pathoptimizeList = reducerVerticalThreshold(afterList, mThreshhold);//抽稀
-//        Log.i("MY","originlist: "+originlist.size());
-//        Log.i("MY","list: "+list.size());
-//        Log.i("MY","afterList: "+afterList.size());
-//        Log.i("MY","pathoptimizeList: "+pathoptimizeList.size());
         return pathoptimizeList;
+    }
+
+    private List<LatLng> kalmanFilterPath(List<LatLng> originlist, int intensity) {
+        List<LatLng> kalmanFilterList = new ArrayList<LatLng>();
+        if (originlist == null || originlist.size() <= 2)
+            return kalmanFilterList;
+        initial();//初始化滤波参数
+        LatLng latLng = null;
+        LatLng lastLoc = originlist.get(0);
+        kalmanFilterList.add(lastLoc);
+        for (int i = 1; i < originlist.size(); i++) {
+            LatLng curLoc = originlist.get(i);
+            latLng = kalmanFilterPoint(lastLoc, curLoc, intensity);
+            if (latLng != null) {
+                kalmanFilterList.add(latLng);
+                lastLoc = latLng;
+            }
+        }
+        return kalmanFilterList;
     }
 
     /**
@@ -106,32 +120,7 @@ public class PathSmoothTool {
         return reducerVerticalThreshold(inPoints, mThreshhold);
     }
 
-    /********************************************************************************************************/
-    /**
-     * 轨迹线路滤波
-     *
-     * @param originlist 原始轨迹list,list.size大于2
-     * @param intensity  滤波强度（1—5）
-     * @return
-     */
-    private List<LatLng> kalmanFilterPath(List<LatLng> originlist, int intensity) {
-        List<LatLng> kalmanFilterList = new ArrayList<LatLng>();
-        if (originlist == null || originlist.size() <= 2)
-            return kalmanFilterList;
-        initial();//初始化滤波参数
-        LatLng latLng = null;
-        LatLng lastLoc = originlist.get(0);
-        kalmanFilterList.add(lastLoc);
-        for (int i = 1; i < originlist.size(); i++) {
-            LatLng curLoc = originlist.get(i);
-            latLng = kalmanFilterPoint(lastLoc, curLoc, intensity);
-            if (latLng != null) {
-                kalmanFilterList.add(latLng);
-                lastLoc = latLng;
-            }
-        }
-        return kalmanFilterList;
-    }
+
 
     /**
      * 单点滤波

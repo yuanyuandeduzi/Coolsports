@@ -214,7 +214,6 @@ public class Plan_Activity_Discern extends AppCompatActivity {
         map.put("filter_threshold", "0.8");
         map.put("access_token", token);
         map.put("top_num", "1");
-
         mRetrofit.create(ApiService.class).plan_discern_postForMessage(map).enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
@@ -229,7 +228,6 @@ public class Plan_Activity_Discern extends AppCompatActivity {
                 mBt_1.setEnabled(true);
                 Toast.makeText(mContext, "请求成功！", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 Toast.makeText(mContext, "请求失败！", Toast.LENGTH_SHORT).show();
